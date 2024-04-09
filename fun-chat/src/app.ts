@@ -1,3 +1,5 @@
+import Router from './router/Router';
+import { IRoute } from './types/interfaces';
 import AboutView from './views/AboutView';
 import ChatView from './views/ChatView';
 import LoginView from './views/LoginView';
@@ -11,6 +13,8 @@ export default class App {
 
   private chatView: ChatView;
 
+  private router: Router;
+
   constructor() {
     this.appElement = document.createElement('div');
     this.appElement.setAttribute('id', 'app');
@@ -18,6 +22,51 @@ export default class App {
     this.loginView = new LoginView();
     this.aboutView = new AboutView();
     this.chatView = new ChatView();
+
+    this.router = new Router(this.createRoutes());
+  }
+
+  createRoutes() {
+    const routes: IRoute[] = [
+      {
+        path: '/',
+        callback: () => {
+          this.renderView(this.loginView);
+          console.log('index path');
+        },
+      },
+      {
+        path: '/login',
+        callback: () => {
+          this.renderView(this.loginView);
+          console.log('login path');
+        },
+      },
+      {
+        path: '/about',
+        callback: () => {
+          this.renderView(this.aboutView);
+          console.log('about path');
+        },
+      },
+      {
+        path: '/chat',
+        callback: () => {
+          this.renderView(this.chatView);
+          console.log('chat path');
+        },
+      },
+    ];
+
+    return routes;
+  }
+
+  renderView(view: LoginView | ChatView | AboutView) {
+    while (this.appElement.firstElementChild) {
+      this.appElement.firstElementChild.remove();
+    }
+
+    this.appElement.append(view.getElement());
   }
 
   init() {
