@@ -1,5 +1,6 @@
 import Router from './router/Router';
 import { IRoute } from './types/interfaces';
+import { ROUTE_PATH } from './utils/globalVariables';
 import AboutView from './views/AboutView';
 import ChatView from './views/ChatView';
 import LoginView from './views/LoginView';
@@ -29,31 +30,27 @@ export default class App {
   createRoutes() {
     const routes: IRoute[] = [
       {
-        path: '/',
+        path: ROUTE_PATH.index,
         callback: () => {
           this.renderView(this.loginView);
-          console.log('index path');
         },
       },
       {
-        path: '/login',
+        path: ROUTE_PATH.login,
         callback: () => {
           this.renderView(this.loginView);
-          console.log('login path');
         },
       },
       {
-        path: '/about',
+        path: ROUTE_PATH.about,
         callback: () => {
           this.renderView(this.aboutView);
-          console.log('about path');
         },
       },
       {
-        path: '/chat',
+        path: ROUTE_PATH.chat,
         callback: () => {
           this.renderView(this.chatView);
-          console.log('chat path');
         },
       },
     ];

@@ -7,7 +7,6 @@ export default class Router {
     this.routes = routes;
 
     this.initialNaviagion();
-    console.log(this.routes);
   }
 
   navigate(url: string) {
