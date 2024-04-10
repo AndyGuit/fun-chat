@@ -10,10 +10,10 @@ export default class Router {
   }
 
   navigate(url: string) {
-    const route = this.routes.find((route) => route.path === url);
+    const selectedRoute = this.routes.find((route) => route.path === url);
 
-    if (route) {
-      route.callback();
+    if (selectedRoute) {
+      selectedRoute.callback();
     }
   }
 

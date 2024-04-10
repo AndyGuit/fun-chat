@@ -3,7 +3,7 @@ import { IRoute } from './types/interfaces';
 import { ROUTE_PATH } from './utils/globalVariables';
 import AboutView from './views/AboutView';
 import ChatView from './views/ChatView';
-import LoginView from './views/LoginView';
+import LoginView from './views/Login/LoginView';
 
 export default class App {
   private appElement: HTMLElement;

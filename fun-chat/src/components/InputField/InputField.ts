@@ -29,7 +29,15 @@ export default function InputField(props: Props) {
   }
 
   const { type, value, id, onChange, placeholder } = props;
-  const input = Input({ type, value, id, onChange, placeholder, classNames: 'input' });
+
+  const input = Input({
+    type,
+    value,
+    id,
+    onChange,
+    placeholder,
+    classNames: 'input',
+  });
 
   inputWrapper.append(input, invalidText);
   wrapper.append(label, inputWrapper);
