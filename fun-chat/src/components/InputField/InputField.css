@@ -1,0 +1,35 @@
+.input-field {
+  display: flex;
+  gap: 1.5em;
+  justify-content: space-between;
+
+  .input-label {
+    font-size: 1.2em;
+  }
+
+  .input-wrapper {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+
+    & .invalid-text {
+      display: none;
+      font-size: 0.75em;
+      color: #e31919;
+    }
+  }
+
+  &.invalid {
+    & .input {
+      border-color: #e31919;
+    }
+
+    & .invalid-text {
+      display: block;
+    }
+
+    & .input-label {
+      color: #e31919;
+    }
+  }
+}
