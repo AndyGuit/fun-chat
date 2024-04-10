@@ -1,11 +1,18 @@
+import './LoginView.css';
 import AuthFieldset from '../../components/AuthFieldset/AuthFieldset';
 import Button from '../../components/Button/Button';
 import InputField from '../../components/InputField/InputField';
+import Link from '../../components/Link/Link';
+import { ROUTE_PATH } from '../../utils/globalVariables';
 import View from '../View';
+import Router from '../../router/Router';
 
 export default class LoginView extends View {
-  constructor() {
+  private router: Router;
+  constructor(router: Router) {
     super('form');
+
+    this.router = router;
 
     this.render();
   }
@@ -27,7 +34,17 @@ export default class LoginView extends View {
 
     const fieldset = AuthFieldset({ legendText: 'Authorization', inputs: [inputName, inputPassword] });
 
-    this.getElement().append(fieldset, button);
+    const infoLink = Link({
+      text: 'About the app',
+      href: ROUTE_PATH.about,
+      onClick: () => this.router.navigate(ROUTE_PATH.about),
+    });
+
+    const controlsGroup = document.createElement('div');
+    controlsGroup.classList.add('form-controls');
+    controlsGroup.append(infoLink, button);
+
+    this.getElement().append(fieldset, controlsGroup);
     this.getElement().addEventListener('submit', this.handleLogin.bind(this));
   }
 

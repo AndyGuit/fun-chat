@@ -20,11 +20,11 @@ export default class App {
     this.appElement = document.createElement('div');
     this.appElement.setAttribute('id', 'app');
 
-    this.loginView = new LoginView();
+    this.router = new Router(this.createRoutes());
+
+    this.loginView = new LoginView(this.router);
     this.aboutView = new AboutView();
     this.chatView = new ChatView();
-
-    this.router = new Router(this.createRoutes());
   }
 
   createRoutes() {
