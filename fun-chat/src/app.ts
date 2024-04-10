@@ -1,7 +1,7 @@
 import Router from './router/Router';
 import { IRoute } from './types/interfaces';
 import { ROUTE_PATH } from './utils/globalVariables';
-import AboutView from './views/AboutView';
+import AboutView from './views/About/AboutView';
 import ChatView from './views/ChatView';
 import LoginView from './views/Login/LoginView';
 

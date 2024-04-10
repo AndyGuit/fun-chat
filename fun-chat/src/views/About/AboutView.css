@@ -1,0 +1,16 @@
+.about-wrapper {
+  padding: 1em 2em;
+  border: 1px solid #f8f8f8;
+  border-radius: 8px;
+  text-align: center;
+
+  & h1 {
+    font-size: 2.2em;
+    line-height: 1.1;
+  }
+}
+
+.about-footer {
+  display: flex;
+  justify-content: space-between;
+}
