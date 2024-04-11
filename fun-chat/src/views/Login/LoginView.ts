@@ -1,16 +1,15 @@
 import './LoginView.css';
-import AuthFieldset from '../../components/AuthFieldset/AuthFieldset';
-import Button from '../../components/Button/Button';
-import InputField from '../../components/InputField/InputField';
-import Link from '../../components/Link/Link';
 import { ROUTE_PATH } from '../../utils/globalVariables';
 import View from '../View';
 import Router from '../../router/Router';
+import AuthForm from '../../components/AuthForm/AuthForm';
+import { validatePassword, validateUserName } from '../../utils/functions';
 
 export default class LoginView extends View {
   private router: Router;
+
   constructor(router: Router) {
-    super('form');
+    super('div');
 
     this.router = router;
 
@@ -18,37 +17,26 @@ export default class LoginView extends View {
   }
 
   render() {
-    const button = Button({ text: 'Login', type: 'submit', classNames: 'button' });
-    const inputName = InputField({
-      type: 'text',
-      placeholder: 'Enter name',
-      value: '',
-      id: 'Name',
-    });
-    const inputPassword = InputField({
-      type: 'password',
-      placeholder: 'Enter password',
-      value: '',
-      id: 'Password',
+    const form = AuthForm({
+      handleClickInfo: () => this.router.navigate(ROUTE_PATH.about),
+      handleSubmit: this.handleLogin.bind(this),
     });
 
-    const fieldset = AuthFieldset({ legendText: 'Authorization', inputs: [inputName, inputPassword] });
-
-    const infoLink = Link({
-      text: 'About the app',
-      href: ROUTE_PATH.about,
-      onClick: () => this.router.navigate(ROUTE_PATH.about),
-    });
-
-    const controlsGroup = document.createElement('div');
-    controlsGroup.classList.add('form-controls');
-    controlsGroup.append(infoLink, button);
-
-    this.getElement().append(fieldset, controlsGroup);
-    this.getElement().addEventListener('submit', this.handleLogin.bind(this));
+    this.getElement().append(form);
   }
 
   handleLogin(e: SubmitEvent) {
     e.preventDefault();
+    const target = e.target as HTMLFormElement;
+    const submitButton = target.children[1].children[1];
+    const nameField = target.children[0].children[1];
+    const passwordField = target.children[0].children[2];
+    const inputName = nameField.children[1].children[0] as HTMLInputElement;
+    const inputPassword = passwordField.children[1].children[0] as HTMLInputElement;
+
+    const isNameValid = validateUserName(inputName.value);
+    const isPasswordValid = validatePassword(inputPassword.value);
+
+    if (!isNameValid || !isPasswordValid) return;
   }
 }

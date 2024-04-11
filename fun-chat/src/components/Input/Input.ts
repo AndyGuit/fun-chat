@@ -5,7 +5,7 @@ interface Props {
   value: string;
   classNames: string | Array<string>;
   id?: string;
-  onChange?: () => void;
+  onInput?: () => void;
   placeholder?: string;
 }
 
@@ -22,7 +22,7 @@ export default function Input(props: Props) {
     element.classList.add(props.classNames);
   }
 
-  if (props.onChange) element.addEventListener('change', props.onChange);
+  if (props.onInput) element.addEventListener('input', props.onInput);
 
   if (props.placeholder) element.placeholder = props.placeholder;
 
