@@ -32,18 +32,16 @@ export default function InputField(props: Props) {
 
   const { type, value, id, placeholder } = props;
 
-  const handleValidate = () => {
-    const isValid = props.validateFn(input.value);
-
-    if (isValid) wrapper.classList.remove('invalid');
-    if (!isValid) wrapper.classList.add('invalid');
-  };
-
   const input = Input({
     type,
     value,
     id,
-    onInput: handleValidate,
+    onInput: () => {
+      const isValid = props.validateFn(input.value);
+
+      if (isValid) wrapper.classList.remove('invalid');
+      if (!isValid) wrapper.classList.add('invalid');
+    },
     placeholder,
     classNames: 'input',
   });
