@@ -28,7 +28,7 @@ export default class LoginView extends View {
   handleLogin(e: SubmitEvent) {
     e.preventDefault();
     const target = e.target as HTMLFormElement;
-    const submitButton = target.children[1].children[1];
+    // const submitButton = target.children[1].children[1];
     const nameField = target.children[0].children[1];
     const passwordField = target.children[0].children[2];
     const inputName = nameField.children[1].children[0] as HTMLInputElement;
@@ -36,6 +36,9 @@ export default class LoginView extends View {
 
     const isNameValid = validateUserName(inputName.value);
     const isPasswordValid = validatePassword(inputPassword.value);
+
+    if (!isNameValid) nameField.classList.add('invalid');
+    if (!isPasswordValid) passwordField.classList.add('invalid');
 
     if (!isNameValid || !isPasswordValid) return;
   }
