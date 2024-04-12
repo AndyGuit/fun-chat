@@ -30,8 +30,6 @@ export default class App {
     this.userState = new UserState();
     this.api = new SocketApi(this.userState);
 
-    console.log(this.userState.isLoggedIn);
-
     this.loginView = new LoginView(this.router, this.api, this.userState);
     this.aboutView = new AboutView();
     this.chatView = new ChatView(this.router, this.api, this.userState);

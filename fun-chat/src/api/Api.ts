@@ -1,5 +1,5 @@
 import UserState from '../store/UserState';
-import { IUserAuthRequest, MessageTypes, TServerResponses } from '../types/apiInterfaces';
+import { IUserAuthRequest, IUserLogoutRequest, MessageTypes, TServerResponses } from '../types/apiInterfaces';
 import { generateId, saveLoginData } from '../utils/functions';
 import { API_URL } from '../utils/globalVariables';
 
@@ -13,6 +13,7 @@ export default class SocketApi {
 
     this.userState = userState;
 
+    this.ws.addEventListener('open', this.handleOpen.bind(this));
     this.ws.addEventListener('message', this.handleMessage.bind(this));
   }
 
@@ -28,9 +29,28 @@ export default class SocketApi {
       },
     };
 
-    console.log(requestData);
+    this.ws.send(JSON.stringify(requestData));
+  }
+
+  logout(data: { name: string; password: string }) {
+    const requestData: IUserLogoutRequest = {
+      id: generateId(),
+      type: MessageTypes.USER_LOGOUT,
+      payload: {
+        user: {
+          login: data.name,
+          password: data.password,
+        },
+      },
+    };
 
     this.ws.send(JSON.stringify(requestData));
+  }
+
+  handleOpen() {
+    if (this.userState.isLoggedIn) {
+      this.login({ name: this.userState.getName(), password: this.userState.getPassword() });
+    }
   }
 
   handleMessage(e: MessageEvent<string>) {
@@ -38,8 +58,11 @@ export default class SocketApi {
 
     if (data.type === MessageTypes.USER_LOGIN) {
       saveLoginData({ name: this.userState.getName(), password: this.userState.getPassword() });
+    }
 
-      console.log(data);
+    if (data.type === MessageTypes.ERROR) {
+      console.log('ERROR');
+      console.error(data);
     }
   }
 }

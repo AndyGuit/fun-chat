@@ -31,6 +31,6 @@ export default class ChatView extends View {
   }
 
   handleLogout() {
-    console.log('logout');
+    this.api.logout({ name: this.userState.getName(), password: this.userState.getPassword() });
   }
 }
