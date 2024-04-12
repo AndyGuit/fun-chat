@@ -1,4 +1,6 @@
+import SocketApi from './api/Api';
 import Router from './router/Router';
+import UserState from './store/UserState';
 import { IRoute } from './types/interfaces';
 import { ROUTE_PATH } from './utils/globalVariables';
 import AboutView from './views/About/AboutView';
@@ -16,13 +18,21 @@ export default class App {
 
   private router: Router;
 
+  private api: SocketApi;
+
+  private userState: UserState;
+
   constructor() {
     this.appElement = document.createElement('div');
     this.appElement.setAttribute('id', 'app');
 
     this.router = new Router(this.createRoutes());
+    this.userState = new UserState();
+    this.api = new SocketApi(this.userState);
 
-    this.loginView = new LoginView(this.router);
+    console.log(this.userState.isLoggedIn);
+
+    this.loginView = new LoginView(this.router, this.api, this.userState);
     this.aboutView = new AboutView();
     this.chatView = new ChatView();
   }
@@ -32,13 +42,23 @@ export default class App {
       {
         path: ROUTE_PATH.index,
         callback: () => {
-          this.renderView(this.loginView);
+          // this.router.navigate(ROUTE_PATH.login);
+          if (this.userState.isLoggedIn) {
+            this.router.navigate(ROUTE_PATH.chat);
+          } else {
+            this.router.navigate(ROUTE_PATH.login);
+          }
         },
       },
       {
         path: ROUTE_PATH.login,
         callback: () => {
-          this.renderView(this.loginView);
+          // this.renderView(this.loginView);
+          if (!this.userState.isLoggedIn) {
+            this.renderView(this.loginView);
+          } else {
+            this.router.navigate(ROUTE_PATH.chat);
+          }
         },
       },
       {
@@ -50,13 +70,20 @@ export default class App {
       {
         path: ROUTE_PATH.chat,
         callback: () => {
-          this.renderView(this.chatView);
+          // this.renderView(this.chatView);
+          if (this.userState.isLoggedIn) {
+            this.renderView(this.chatView);
+          } else {
+            this.router.navigate(ROUTE_PATH.login);
+          }
         },
       },
     ];
 
     return routes;
   }
+
+  checkIsLoggedIn() {}
 
   renderView(view: LoginView | ChatView | AboutView) {
     while (this.appElement.firstElementChild) {
@@ -67,8 +94,6 @@ export default class App {
   }
 
   init() {
-    this.appElement.append(this.loginView.getElement());
-
     document.body.append(this.appElement);
   }
 }
