@@ -1,11 +1,6 @@
 import UserState from '../store/UserState';
-import {
-  IUserAuthRequest,
-  IUserLogoutRequest,
-  MessageTypes,
-  TServerResponses,
-} from '../types/apiInterfaces';
-import { deleteLoginData, generateId, saveLoginData } from '../utils/functions';
+import { IUserAuthRequest, IUserLogoutRequest, MessageTypes } from '../types/apiInterfaces';
+import { generateId } from '../utils/functions';
 import { API_URL } from '../utils/globalVariables';
 
 export default class SocketApi {
@@ -19,7 +14,6 @@ export default class SocketApi {
     this.userState = userState;
 
     this.ws.addEventListener('open', this.handleOpen.bind(this));
-    // this.ws.addEventListener('message', this.handleMessage.bind(this));
   }
 
   login(data: { name: string; password: string }) {
@@ -59,25 +53,10 @@ export default class SocketApi {
   }
 
   addMessageListener(callback: (e: MessageEvent<string>) => void) {
-    console.log('listener added: ', callback.name);
     this.ws.addEventListener('message', callback);
   }
 
   removeMessageListener(callback: (e: MessageEvent<string>) => void) {
-    console.log('listener removed: ', callback.name);
     this.ws.removeEventListener('message', callback);
   }
-
-  // handleMessage(e: MessageEvent<string>) {
-  //   const data: TServerResponses = JSON.parse(e.data);
-
-  //   if (data.type === MessageTypes.USER_LOGOUT) {
-  //     deleteLoginData();
-  //   }
-
-  //   if (data.type === MessageTypes.ERROR) {
-  //     console.log('ERROR');
-  //     console.error(data);
-  //   }
-  // }
 }

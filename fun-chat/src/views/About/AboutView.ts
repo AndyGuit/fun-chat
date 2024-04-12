@@ -1,7 +1,7 @@
 import './AboutView.css';
 import View from '../View';
 import Link from '../../components/Link/Link';
-import { ROUTE_PATH } from '../../utils/globalVariables';
+import { CREATOR_GITHUB, ROUTE_PATH } from '../../utils/globalVariables';
 
 export default class AboutView extends View {
   constructor() {
@@ -21,7 +21,7 @@ export default class AboutView extends View {
     p.textContent = "App was developed as a task 'Fun Chat' for 'RS-School' 2024.";
 
     const authorLink = document.createElement('a');
-    authorLink.setAttribute('href', 'https://github.com/AndyGuit');
+    authorLink.setAttribute('href', CREATOR_GITHUB);
     authorLink.classList.add('link');
     authorLink.setAttribute('target', '_blank');
     authorLink.textContent = 'Author Github';

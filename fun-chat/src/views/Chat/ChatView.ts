@@ -6,6 +6,7 @@ import UserState from '../../store/UserState';
 import View from '../View';
 import { ROUTE_PATH } from '../../utils/globalVariables';
 import { MessageTypes, TLogoutResponse } from '../../types/apiInterfaces';
+import Footer from '../../components/Footer/Footer';
 
 export default class ChatView extends View {
   private router: Router;
@@ -33,7 +34,9 @@ export default class ChatView extends View {
       onLogout: this.handleLogout.bind(this),
     });
 
-    this.getElement().append(header);
+    const footer = Footer({});
+
+    this.getElement().append(header, footer);
   }
 
   handleLogout() {
@@ -44,8 +47,6 @@ export default class ChatView extends View {
     const data: TLogoutResponse = JSON.parse(e.data);
 
     if (data.type === MessageTypes.USER_LOGOUT) {
-      // console.log(data);
-
       this.userState.setName('');
       this.userState.setPassword('');
       this.userState.isLoggedIn = data.payload.user.isLogined;
