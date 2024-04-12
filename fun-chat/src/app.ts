@@ -4,7 +4,7 @@ import UserState from './store/UserState';
 import { IRoute } from './types/interfaces';
 import { ROUTE_PATH } from './utils/globalVariables';
 import AboutView from './views/About/AboutView';
-import ChatView from './views/ChatView';
+import ChatView from './views/Chat/ChatView';
 import LoginView from './views/Login/LoginView';
 
 export default class App {
@@ -34,7 +34,7 @@ export default class App {
 
     this.loginView = new LoginView(this.router, this.api, this.userState);
     this.aboutView = new AboutView();
-    this.chatView = new ChatView();
+    this.chatView = new ChatView(this.router, this.api, this.userState);
   }
 
   createRoutes() {

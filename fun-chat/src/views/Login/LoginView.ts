@@ -3,7 +3,7 @@ import { ROUTE_PATH } from '../../utils/globalVariables';
 import View from '../View';
 import Router from '../../router/Router';
 import AuthForm from '../../components/AuthForm/AuthForm';
-import { saveLoginData, validatePassword, validateUserName } from '../../utils/functions';
+import { validatePassword, validateUserName } from '../../utils/functions';
 import SocketApi from '../../api/Api';
 import UserState from '../../store/UserState';
 
@@ -57,8 +57,6 @@ export default class LoginView extends View {
 
     this.userState.setName(userName);
     this.userState.setPassword(userPassword);
-
-    // saveLoginData({ name: inputName.value, password: inputPassword.value });
 
     this.router.navigate(ROUTE_PATH.chat);
   }
