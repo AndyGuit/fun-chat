@@ -5,6 +5,7 @@ import Router from '../../router/Router';
 import UserState from '../../store/UserState';
 import View from '../View';
 import { ROUTE_PATH } from '../../utils/globalVariables';
+import { MessageTypes, TLogoutResponse } from '../../types/apiInterfaces';
 
 export default class ChatView extends View {
   private router: Router;
@@ -22,6 +23,7 @@ export default class ChatView extends View {
 
     this.userState = userState;
 
+    this.api.addMessageListener(this.logoutListener.bind(this));
     this.render();
   }
 
@@ -36,11 +38,23 @@ export default class ChatView extends View {
 
   handleLogout() {
     this.api.logout({ name: this.userState.getName(), password: this.userState.getPassword() });
+  }
 
-    this.userState.setName('');
-    this.userState.setPassword('');
-    this.userState.isLoggedIn = false;
+  logoutListener(e: MessageEvent<string>) {
+    const data: TLogoutResponse = JSON.parse(e.data);
 
-    this.router.navigate(ROUTE_PATH.login);
+    if (data.type === MessageTypes.USER_LOGOUT) {
+      // console.log(data);
+
+      this.userState.setName('');
+      this.userState.setPassword('');
+      this.userState.isLoggedIn = data.payload.user.isLogined;
+
+      this.router.navigate(ROUTE_PATH.login);
+    }
+
+    if (data.type === MessageTypes.ERROR) {
+      console.log(data);
+    }
   }
 }

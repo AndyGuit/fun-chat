@@ -56,6 +56,9 @@ export interface IErrorResponse {
   };
 }
 
+export type TLoginResponse = IUserAuthSuccessResponse | IErrorResponse;
+export type TLogoutResponse = IUserLogoutSuccessResponse | IErrorResponse;
+
 export type TServerResponses =
   | IUserAuthSuccessResponse
   | IUserLogoutSuccessResponse

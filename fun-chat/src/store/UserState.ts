@@ -10,8 +10,6 @@ export default class UserState {
   constructor() {
     const loginData = getLoginData();
 
-    console.log(loginData);
-
     if (loginData) {
       this.isLoggedIn = true;
       this.name = loginData.name;

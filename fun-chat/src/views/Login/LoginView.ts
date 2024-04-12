@@ -3,9 +3,10 @@ import { ROUTE_PATH } from '../../utils/globalVariables';
 import View from '../View';
 import Router from '../../router/Router';
 import AuthForm from '../../components/AuthForm/AuthForm';
-import { validatePassword, validateUserName } from '../../utils/functions';
+import { saveLoginData, validatePassword, validateUserName } from '../../utils/functions';
 import SocketApi from '../../api/Api';
 import UserState from '../../store/UserState';
+import { MessageTypes, TLoginResponse } from '../../types/apiInterfaces';
 
 export default class LoginView extends View {
   private router: Router;
@@ -23,6 +24,7 @@ export default class LoginView extends View {
 
     this.userState = userState;
 
+    this.api.addMessageListener(this.loginListener.bind(this));
     this.render();
   }
 
@@ -57,7 +59,19 @@ export default class LoginView extends View {
 
     this.userState.setName(userName);
     this.userState.setPassword(userPassword);
+  }
 
-    this.router.navigate(ROUTE_PATH.chat);
+  loginListener(e: MessageEvent<string>) {
+    const data: TLoginResponse = JSON.parse(e.data);
+
+    if (data.type === MessageTypes.USER_LOGIN) {
+      this.userState.isLoggedIn = data.payload.user.isLogined;
+      saveLoginData({ name: this.userState.getName(), password: this.userState.getPassword() });
+      this.router.navigate(ROUTE_PATH.chat);
+    }
+
+    if (data.type === MessageTypes.ERROR) {
+      console.log(data.payload.error);
+    }
   }
 }
