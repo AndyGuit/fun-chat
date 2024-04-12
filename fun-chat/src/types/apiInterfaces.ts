@@ -37,6 +37,17 @@ export interface IUserAuthSuccessResponse {
   };
 }
 
+export interface IUserLogoutSuccessResponse {
+  id: string;
+  type: MessageTypes.USER_LOGOUT;
+  payload: {
+    user: {
+      isLogined: boolean;
+      login: string;
+    };
+  };
+}
+
 export interface IErrorResponse {
   id: string;
   type: MessageTypes.ERROR;
@@ -45,4 +56,7 @@ export interface IErrorResponse {
   };
 }
 
-export type TServerResponses = IUserAuthSuccessResponse | IErrorResponse;
+export type TServerResponses =
+  | IUserAuthSuccessResponse
+  | IUserLogoutSuccessResponse
+  | IErrorResponse;

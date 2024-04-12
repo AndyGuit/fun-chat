@@ -18,6 +18,10 @@ export function getLoginData(): { name: string; password: string } | null {
   return JSON.parse(userData);
 }
 
+export function deleteLoginData() {
+  sessionStorage.removeItem(STORAGE_KEYS.userData);
+}
+
 export function generateId() {
   return window.crypto.randomUUID();
 }

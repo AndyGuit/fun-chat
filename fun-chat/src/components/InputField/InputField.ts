@@ -30,7 +30,13 @@ export default function InputField(props: Props) {
     label.setAttribute('for', props.id);
   }
 
-  const { type, value, id, placeholder } = props;
+  // prettier-ignore
+  const {
+    type,
+    value,
+    id,
+    placeholder,
+  } = props;
 
   const input = Input({
     type,

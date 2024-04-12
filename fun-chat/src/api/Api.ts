@@ -1,6 +1,11 @@
 import UserState from '../store/UserState';
-import { IUserAuthRequest, IUserLogoutRequest, MessageTypes, TServerResponses } from '../types/apiInterfaces';
-import { generateId, saveLoginData } from '../utils/functions';
+import {
+  IUserAuthRequest,
+  IUserLogoutRequest,
+  MessageTypes,
+  TServerResponses,
+} from '../types/apiInterfaces';
+import { deleteLoginData, generateId, saveLoginData } from '../utils/functions';
 import { API_URL } from '../utils/globalVariables';
 
 export default class SocketApi {
@@ -58,6 +63,10 @@ export default class SocketApi {
 
     if (data.type === MessageTypes.USER_LOGIN) {
       saveLoginData({ name: this.userState.getName(), password: this.userState.getPassword() });
+    }
+
+    if (data.type === MessageTypes.USER_LOGOUT) {
+      deleteLoginData();
     }
 
     if (data.type === MessageTypes.ERROR) {

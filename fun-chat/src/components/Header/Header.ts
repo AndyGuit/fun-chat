@@ -18,7 +18,12 @@ export default function Header(props: Props) {
   h1.classList.add('app-name');
   h1.textContent = 'Fun Chat';
 
-  const logoutButton = Button({ text: 'Logout', classNames: 'button', type: 'button', onClick: props.onLogout });
+  const logoutButton = Button({
+    text: 'Logout',
+    classNames: 'button',
+    type: 'button',
+    onClick: props.onLogout,
+  });
 
   element.append(h2, h1, logoutButton);
   return element;

@@ -31,7 +31,10 @@ export default function AuthForm(props: Props) {
     invalidText: 'Min 4 characters and contain digits',
   });
 
-  const fieldset = AuthFieldset({ legendText: 'Authorization', inputs: [inputName, inputPassword] });
+  const fieldset = AuthFieldset({
+    legendText: 'Authorization',
+    inputs: [inputName, inputPassword],
+  });
 
   const infoLink = Link({
     text: 'About the app',
