@@ -1,0 +1,38 @@
+.user-list-container {
+  width: 30%;
+  border-radius: 8px;
+  border: 1px solid #c0c0c0;
+  padding: 0.5em;
+}
+
+.user-list {
+  overflow-y: scroll;
+}
+
+.user-list-item {
+  padding: 0.5em;
+  border-radius: 8px;
+  cursor: pointer;
+  list-style: none;
+
+  &::before {
+    content: '';
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin-right: 5px;
+    border-radius: 50%;
+  }
+
+  &:hover {
+    background-color: #1a1a1a;
+  }
+
+  &.active::before {
+    background-color: #0cc16c;
+  }
+
+  &.inactive::before {
+    background-color: rgba(222, 226, 230, 0.5);
+  }
+}

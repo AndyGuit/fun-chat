@@ -1,6 +1,8 @@
 export enum MessageTypes {
   USER_LOGIN = 'USER_LOGIN',
   USER_LOGOUT = 'USER_LOGOUT',
+  USER_ACTIVE = 'USER_ACTIVE',
+  USER_INACTIVE = 'USER_INACTIVE',
   ERROR = 'ERROR',
 }
 
@@ -46,6 +48,27 @@ export interface IUserLogoutSuccessResponse {
       login: string;
     };
   };
+}
+
+export interface IUserActiveResponse {
+  id: string;
+  type: MessageTypes.USER_ACTIVE;
+  payload: {
+    users: Array<IUser>;
+  };
+}
+
+export interface IUserInactiveResponse {
+  id: string;
+  type: MessageTypes.USER_INACTIVE;
+  payload: {
+    users: Array<IUser>;
+  };
+}
+
+export interface IUser {
+  login: string;
+  isLogined: boolean;
 }
 
 export interface IErrorResponse {

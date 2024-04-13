@@ -7,6 +7,7 @@ import View from '../View';
 import { ROUTE_PATH } from '../../utils/globalVariables';
 import { MessageTypes, TLogoutResponse } from '../../types/apiInterfaces';
 import Footer from '../../components/Footer/Footer';
+import { UserList } from '../../components/UserList/UserList';
 
 export default class ChatView extends View {
   private router: Router;
@@ -34,9 +35,31 @@ export default class ChatView extends View {
       onLogout: this.handleLogout.bind(this),
     });
 
+    const main = document.createElement('main');
+
+    const usersList = UserList({
+      users: [
+        {
+          login: 'Aaaaa',
+          isLogined: true,
+        },
+        {
+          login: 'Bbbb',
+          isLogined: false,
+        },
+        {
+          login: 'Ccccc',
+          isLogined: true,
+        },
+      ],
+      currentUserName: 'Aaaaa',
+    });
+
+    main.append(usersList);
+
     const footer = Footer();
 
-    this.getElement().append(header, footer);
+    this.getElement().append(header, main, footer);
   }
 
   handleLogout() {
