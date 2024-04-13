@@ -10,12 +10,6 @@ import LoginView from './views/Login/LoginView';
 export default class App {
   private appElement: HTMLElement;
 
-  private loginView: LoginView;
-
-  private aboutView: AboutView;
-
-  private chatView: ChatView;
-
   private router: Router;
 
   private api: SocketApi;
@@ -29,10 +23,6 @@ export default class App {
     this.router = new Router(this.createRoutes());
     this.userState = new UserState();
     this.api = new SocketApi(this.userState);
-
-    this.loginView = new LoginView(this.router, this.api, this.userState);
-    this.aboutView = new AboutView();
-    this.chatView = new ChatView(this.router, this.api, this.userState);
   }
 
   createRoutes() {
@@ -53,7 +43,7 @@ export default class App {
         callback: () => {
           // this.renderView(this.loginView);
           if (!this.userState.isLoggedIn) {
-            this.renderView(this.loginView);
+            this.renderView(new LoginView(this.router, this.api, this.userState));
           } else {
             this.router.navigate(ROUTE_PATH.chat);
           }
@@ -62,7 +52,7 @@ export default class App {
       {
         path: ROUTE_PATH.about,
         callback: () => {
-          this.renderView(this.aboutView);
+          this.renderView(new AboutView());
         },
       },
       {
@@ -70,7 +60,7 @@ export default class App {
         callback: () => {
           // this.renderView(this.chatView);
           if (this.userState.isLoggedIn) {
-            this.renderView(this.chatView);
+            this.renderView(new ChatView(this.router, this.api, this.userState));
           } else {
             this.router.navigate(ROUTE_PATH.login);
           }
@@ -80,8 +70,6 @@ export default class App {
 
     return routes;
   }
-
-  checkIsLoggedIn() {}
 
   renderView(view: LoginView | ChatView | AboutView) {
     while (this.appElement.firstElementChild) {

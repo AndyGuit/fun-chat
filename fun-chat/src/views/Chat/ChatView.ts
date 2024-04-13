@@ -34,7 +34,7 @@ export default class ChatView extends View {
       onLogout: this.handleLogout.bind(this),
     });
 
-    const footer = Footer({});
+    const footer = Footer();
 
     this.getElement().append(header, footer);
   }

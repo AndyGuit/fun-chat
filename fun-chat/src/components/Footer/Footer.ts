@@ -1,9 +1,7 @@
 import { CREATOR_GITHUB, RS_SCHOOL_LINK } from '../../utils/globalVariables';
 import './Footer.css';
 
-interface Props {}
-
-export default function Footer(props: Props) {
+export default function Footer() {
   const element = document.createElement('footer');
   element.classList.add('footer');
 
