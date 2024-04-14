@@ -153,7 +153,11 @@ export interface IErrorResponse {
 export type TLoginResponse = IUserAuthSuccessResponse | IErrorResponse;
 export type TLogoutResponse = IUserLogoutSuccessResponse | IErrorResponse;
 
-export type TMessages = IUserActiveRequest | IUserInactiveRequest | ISendMessageRequest;
+export type TMessages =
+  | IUserActiveRequest
+  | IUserInactiveRequest
+  | ISendMessageRequest
+  | IMessageHistoryRequest;
 
 export type TServerResponses =
   | IUserAuthSuccessResponse

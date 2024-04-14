@@ -1,4 +1,4 @@
-import { ISendMessageRequest, IUser, MessageTypes } from '../../types/apiInterfaces';
+import { IMessage, ISendMessageRequest, IUser, MessageTypes } from '../../types/apiInterfaces';
 import { generateId } from '../../utils/functions';
 import Button from '../Button/Button';
 import Input from '../Input/Input';
@@ -53,9 +53,7 @@ export default function UserDialogue(props: Props) {
 
   function handleDialogue(user: IUser) {
     dialogueChat.textContent = '';
-    while (dialogueChat.firstElementChild) {
-      dialogueChat.firstElementChild.remove();
-    }
+    dialogueChat.classList.add('dialog-started');
 
     selectedUserName.textContent = user.login;
     selectedUserStatus.textContent = user.isLogined ? 'Online' : 'Offline';
@@ -65,9 +63,23 @@ export default function UserDialogue(props: Props) {
     input.placeholder = 'Your message';
   }
 
+  function renderMessagesHistory(messages: IMessage[]) {
+    const messageElements = messages.map((msg) => {
+      const div = document.createElement('div');
+      div.textContent = msg.text;
+
+      return div;
+    });
+
+    console.log(messages);
+
+    dialogueChat.append(...messageElements);
+  }
+
   container.append(header, dialogueChat, form);
   return {
     element: container,
     handleDialogue,
+    renderMessagesHistory,
   };
 }

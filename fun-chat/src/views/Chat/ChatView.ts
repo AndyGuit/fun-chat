@@ -14,6 +14,7 @@ import {
   IUser,
   ISendMessageRequest,
   ISendMessageResponse,
+  IMessageHistoryResponse,
 } from '../../types/apiInterfaces';
 import Footer from '../../components/Footer/Footer';
 import { UserList } from '../../components/UserList/UserList';
@@ -61,10 +62,15 @@ export default class ChatView extends View {
       this.requestUsers();
     }
 
+    this.addApiListeners();
+    this.render();
+  }
+
+  addApiListeners() {
+    this.api.addMessageListener(this.messagesHistoryListener.bind(this));
     this.api.addMessageListener(this.getMessageListener.bind(this));
     this.api.addMessageListener(this.getUsersListener.bind(this));
     this.api.addMessageListener(this.logoutListener.bind(this));
-    this.render();
   }
 
   render() {
@@ -96,6 +102,15 @@ export default class ChatView extends View {
   }
 
   startDialogue(user: IUser) {
+    this.api.send({
+      id: generateId(),
+      type: MessageTypes.MSG_FROM_USER,
+      payload: {
+        user: {
+          login: user.login,
+        },
+      },
+    });
     this.userDialogueElement.handleDialogue(user);
   }
 
@@ -114,7 +129,7 @@ export default class ChatView extends View {
   getUsersListener(e: MessageEvent<string>) {
     const data: IUserActiveResponse | IUserInactiveResponse = JSON.parse(e.data);
 
-    console.log(data);
+    // console.log(data);
 
     if (data.type === MessageTypes.USER_ACTIVE) {
       this.userList = [...this.userList, ...data.payload.users];
@@ -133,6 +148,14 @@ export default class ChatView extends View {
       if (data.payload.message.to === this.userState.getName()) {
         console.log(data);
       }
+    }
+  }
+
+  messagesHistoryListener(e: MessageEvent<string>) {
+    const data: IMessageHistoryResponse = JSON.parse(e.data);
+
+    if (data.type === MessageTypes.MSG_FROM_USER) {
+      this.userDialogueElement.renderMessagesHistory(data.payload.messages);
     }
   }
 
