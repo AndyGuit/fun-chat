@@ -4,6 +4,8 @@ export enum MessageTypes {
   USER_ACTIVE = 'USER_ACTIVE',
   USER_INACTIVE = 'USER_INACTIVE',
   ERROR = 'ERROR',
+  MSG_SEND = 'MSG_SEND',
+  MSG_FROM_USER = 'MSG_FROM_USER',
 }
 
 export enum ReadyStateStatus {
@@ -85,9 +87,59 @@ export interface IUserInactiveResponse {
   };
 }
 
+export interface ISendMessageRequest {
+  id: string;
+  type: MessageTypes.MSG_SEND;
+  payload: {
+    message: {
+      to: string;
+      text: string;
+    };
+  };
+}
+
+export interface ISendMessageResponse {
+  id: string;
+  type: MessageTypes.MSG_SEND;
+  payload: {
+    message: IMessage;
+  };
+}
+
+export interface IMessageHistoryRequest {
+  id: string;
+  type: MessageTypes.MSG_FROM_USER;
+  payload: {
+    user: {
+      login: string;
+    };
+  };
+}
+
+export interface IMessageHistoryResponse {
+  id: string;
+  type: MessageTypes.MSG_FROM_USER;
+  payload: {
+    messages: IMessage[];
+  };
+}
+
 export interface IUser {
   login: string;
   isLogined: boolean;
+}
+
+export interface IMessage {
+  id: string;
+  from: string;
+  to: string;
+  text: string;
+  datetime: number;
+  status: {
+    isDelivered: boolean;
+    isReaded: boolean;
+    isEdited: boolean;
+  };
 }
 
 export interface IErrorResponse {
@@ -100,6 +152,8 @@ export interface IErrorResponse {
 
 export type TLoginResponse = IUserAuthSuccessResponse | IErrorResponse;
 export type TLogoutResponse = IUserLogoutSuccessResponse | IErrorResponse;
+
+export type TMessages = IUserActiveRequest | IUserInactiveRequest | ISendMessageRequest;
 
 export type TServerResponses =
   | IUserAuthSuccessResponse

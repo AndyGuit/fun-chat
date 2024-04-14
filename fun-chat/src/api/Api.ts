@@ -1,11 +1,10 @@
 import UserState from '../store/UserState';
 import {
   ReadyStateStatus,
-  IUserActiveRequest,
   IUserAuthRequest,
-  IUserInactiveRequest,
   IUserLogoutRequest,
   MessageTypes,
+  TMessages,
 } from '../types/apiInterfaces';
 import { generateId } from '../utils/functions';
 import { API_URL } from '../utils/globalVariables';
@@ -63,7 +62,7 @@ export default class SocketApi {
     return this.ws.readyState;
   }
 
-  send(message: IUserActiveRequest | IUserInactiveRequest) {
+  send(message: TMessages) {
     this.ws.send(JSON.stringify(message));
   }
 

@@ -1,9 +1,12 @@
-import { IUser } from '../../types/apiInterfaces';
+import { ISendMessageRequest, IUser, MessageTypes } from '../../types/apiInterfaces';
+import { generateId } from '../../utils/functions';
 import Button from '../Button/Button';
 import Input from '../Input/Input';
 import './UserDialogue.css';
 
-interface Props {}
+interface Props {
+  handleSendMessage: (data: ISendMessageRequest) => void;
+}
 
 export default function UserDialogue(props: Props) {
   const container = document.createElement('div');
@@ -25,7 +28,6 @@ export default function UserDialogue(props: Props) {
     classNames: 'input',
     type: 'text',
     value: '',
-    placeholder: 'Your message',
   });
   input.setAttribute('disabled', 'true');
   const button = Button({ classNames: 'button', text: 'Send', type: 'submit', disabled: true });
@@ -34,7 +36,18 @@ export default function UserDialogue(props: Props) {
 
   form.addEventListener('submit', (e) => {
     e.preventDefault();
-    console.log(input.value);
+
+    props.handleSendMessage({
+      id: generateId(),
+      type: MessageTypes.MSG_SEND,
+      payload: {
+        message: {
+          text: input.value,
+          to: selectedUserName.textContent!,
+        },
+      },
+    });
+
     input.value = '';
   });
 
@@ -47,6 +60,9 @@ export default function UserDialogue(props: Props) {
     selectedUserName.textContent = user.login;
     selectedUserStatus.textContent = user.isLogined ? 'Online' : 'Offline';
     selectedUserStatus.className = user.isLogined ? 'active' : 'inactive';
+    button.removeAttribute('disabled');
+    input.removeAttribute('disabled');
+    input.placeholder = 'Your message';
   }
 
   container.append(header, dialogueChat, form);

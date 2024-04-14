@@ -8,7 +8,11 @@
   background-color: #1a1a1a;
   transition: border-color 0.25s;
 
-  &:active {
+  &:not([disabled]):active {
     outline: 2px auto -webkit-focus-ring-color;
+  }
+
+  &:disabled {
+    opacity: 0.6;
   }
 }

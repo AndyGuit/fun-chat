@@ -12,6 +12,8 @@ import {
   MessageTypes,
   TLogoutResponse,
   IUser,
+  ISendMessageRequest,
+  ISendMessageResponse,
 } from '../../types/apiInterfaces';
 import Footer from '../../components/Footer/Footer';
 import { UserList } from '../../components/UserList/UserList';
@@ -49,7 +51,9 @@ export default class ChatView extends View {
       handleClickUser: this.startDialogue.bind(this),
     });
 
-    this.userDialogueElement = UserDialogue({});
+    this.userDialogueElement = UserDialogue({
+      handleSendMessage: this.sendMessage.bind(this),
+    });
 
     if (this.api.getStatus() === ReadyStateStatus.CONNETCING) {
       this.api.addOpenListener(this.requestUsers.bind(this));
@@ -57,6 +61,7 @@ export default class ChatView extends View {
       this.requestUsers();
     }
 
+    this.api.addMessageListener(this.getMessageListener.bind(this));
     this.api.addMessageListener(this.getUsersListener.bind(this));
     this.api.addMessageListener(this.logoutListener.bind(this));
     this.render();
@@ -75,6 +80,10 @@ export default class ChatView extends View {
     const footer = Footer();
 
     this.getElement().append(header, main, footer);
+  }
+
+  sendMessage(data: ISendMessageRequest) {
+    this.api.send(data);
   }
 
   requestUsers() {
@@ -105,15 +114,25 @@ export default class ChatView extends View {
   getUsersListener(e: MessageEvent<string>) {
     const data: IUserActiveResponse | IUserInactiveResponse = JSON.parse(e.data);
 
+    console.log(data);
+
     if (data.type === MessageTypes.USER_ACTIVE) {
-      console.log('active users: ', data);
       this.userList = [...this.userList, ...data.payload.users];
     }
 
     if (data.type === MessageTypes.USER_INACTIVE) {
-      console.log('inactive users: ', data);
       this.userList = [...this.userList, ...data.payload.users];
       this.userListElement.renderUsers(this.userList);
+    }
+  }
+
+  getMessageListener(e: MessageEvent<string>) {
+    const data: ISendMessageResponse = JSON.parse(e.data);
+
+    if (data.type === MessageTypes.MSG_SEND) {
+      if (data.payload.message.to === this.userState.getName()) {
+        console.log(data);
+      }
     }
   }
 
