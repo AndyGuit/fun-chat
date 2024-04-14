@@ -6,6 +6,13 @@ export enum MessageTypes {
   ERROR = 'ERROR',
 }
 
+export enum ReadyStateStatus {
+  CONNETCING,
+  OPEN,
+  CLOSING,
+  CLOSED,
+}
+
 export interface IUserAuthRequest {
   id: string;
   type: MessageTypes.USER_LOGIN;
@@ -26,6 +33,18 @@ export interface IUserLogoutRequest {
       password: string;
     };
   };
+}
+
+export interface IUserActiveRequest {
+  id: string;
+  type: MessageTypes.USER_ACTIVE;
+  payload: null;
+}
+
+export interface IUserInactiveRequest {
+  id: string;
+  type: MessageTypes.USER_INACTIVE;
+  payload: null;
 }
 
 export interface IUserAuthSuccessResponse {

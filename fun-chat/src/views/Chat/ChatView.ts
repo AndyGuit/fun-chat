@@ -5,14 +5,26 @@ import Router from '../../router/Router';
 import UserState from '../../store/UserState';
 import View from '../View';
 import { ROUTE_PATH } from '../../utils/globalVariables';
-import { MessageTypes, TLogoutResponse } from '../../types/apiInterfaces';
+import {
+  ReadyStateStatus,
+  IUserActiveResponse,
+  IUserInactiveResponse,
+  MessageTypes,
+  TLogoutResponse,
+  IUser,
+} from '../../types/apiInterfaces';
 import Footer from '../../components/Footer/Footer';
 import { UserList } from '../../components/UserList/UserList';
+import { generateId } from '../../utils/functions';
 
 export default class ChatView extends View {
   private router: Router;
 
   private api: SocketApi;
+
+  private userListElement: ReturnType<typeof UserList>;
+
+  private userList: IUser[];
 
   private userState: UserState;
 
@@ -25,6 +37,20 @@ export default class ChatView extends View {
 
     this.userState = userState;
 
+    this.userList = [];
+
+    this.userListElement = UserList({
+      users: this.userList,
+      currentUserName: this.userState.getName(),
+    });
+
+    if (this.api.getStatus() === ReadyStateStatus.CONNETCING) {
+      this.api.addOpenListener(this.requestUsers.bind(this));
+    } else {
+      this.requestUsers();
+    }
+
+    this.api.addMessageListener(this.getUsersListener.bind(this));
     this.api.addMessageListener(this.logoutListener.bind(this));
     this.render();
   }
@@ -37,33 +63,35 @@ export default class ChatView extends View {
 
     const main = document.createElement('main');
 
-    const usersList = UserList({
-      users: [
-        {
-          login: 'Aaaaa',
-          isLogined: true,
-        },
-        {
-          login: 'Bbbb',
-          isLogined: false,
-        },
-        {
-          login: 'Ccccc',
-          isLogined: true,
-        },
-      ],
-      currentUserName: 'Aaaaa',
-    });
-
-    main.append(usersList);
+    main.append(this.userListElement.element);
 
     const footer = Footer();
 
     this.getElement().append(header, main, footer);
   }
 
+  requestUsers() {
+    this.api.send({ id: generateId(), payload: null, type: MessageTypes.USER_ACTIVE });
+    this.api.send({ id: generateId(), payload: null, type: MessageTypes.USER_INACTIVE });
+  }
+
   handleLogout() {
     this.api.logout({ name: this.userState.getName(), password: this.userState.getPassword() });
+  }
+
+  getUsersListener(e: MessageEvent<string>) {
+    const data: IUserActiveResponse | IUserInactiveResponse = JSON.parse(e.data);
+
+    if (data.type === MessageTypes.USER_ACTIVE) {
+      console.log('active users: ', data);
+      this.userList = [...this.userList, ...data.payload.users];
+    }
+
+    if (data.type === MessageTypes.USER_INACTIVE) {
+      console.log('inactive users: ', data);
+      this.userList = [...this.userList, ...data.payload.users];
+      this.userListElement.renderUsers(this.userList);
+    }
   }
 
   logoutListener(e: MessageEvent<string>) {

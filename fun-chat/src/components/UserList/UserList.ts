@@ -13,18 +13,29 @@ export function UserList(props: Props) {
   const ul = document.createElement('ul');
   ul.classList.add('user-list');
 
-  const liItem = props.users
-    .filter((user) => user.login !== props.currentUserName)
-    .map((user) => {
-      const li = document.createElement('li');
-      const activeClass = user.isLogined ? 'active' : 'inactive';
-      li.classList.add('user-list-item', activeClass);
-      li.textContent = user.login;
+  function renderUsers(users: Array<IUser>) {
+    while (ul.firstElementChild) {
+      ul.firstElementChild.remove();
+    }
 
-      return li;
-    });
+    const liItem = users
+      .filter((user) => user.login !== props.currentUserName)
+      .map((user) => {
+        const li = document.createElement('li');
+        const activeClass = user.isLogined ? 'active' : 'inactive';
+        li.classList.add('user-list-item', activeClass);
+        li.textContent = user.login;
 
-  ul.append(...liItem);
+        return li;
+      });
+    ul.append(...liItem);
+  }
+
+  renderUsers(props.users);
+
   container.append(ul);
-  return container;
+  return {
+    element: container,
+    renderUsers,
+  };
 }

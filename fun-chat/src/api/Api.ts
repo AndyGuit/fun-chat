@@ -1,5 +1,12 @@
 import UserState from '../store/UserState';
-import { IUserAuthRequest, IUserLogoutRequest, MessageTypes } from '../types/apiInterfaces';
+import {
+  ReadyStateStatus,
+  IUserActiveRequest,
+  IUserAuthRequest,
+  IUserInactiveRequest,
+  IUserLogoutRequest,
+  MessageTypes,
+} from '../types/apiInterfaces';
 import { generateId } from '../utils/functions';
 import { API_URL } from '../utils/globalVariables';
 
@@ -50,6 +57,18 @@ export default class SocketApi {
     if (this.userState.isLoggedIn) {
       this.login({ name: this.userState.getName(), password: this.userState.getPassword() });
     }
+  }
+
+  getStatus(): ReadyStateStatus {
+    return this.ws.readyState;
+  }
+
+  send(message: IUserActiveRequest | IUserInactiveRequest) {
+    this.ws.send(JSON.stringify(message));
+  }
+
+  addOpenListener(callback: (e: Event) => void) {
+    this.ws.addEventListener('open', callback);
   }
 
   addMessageListener(callback: (e: MessageEvent<string>) => void) {
