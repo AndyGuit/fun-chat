@@ -1,0 +1,35 @@
+.user-dialogue-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  width: 70%;
+  padding: 0.5em;
+  border: 1px solid #c0c0c0;
+  border-radius: 8px;
+}
+
+.user-dialogue-header {
+  height: 10%;
+  border-bottom: 1px solid #c0c0c0;
+}
+
+.user-dialogue-chat {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  overflow-y: scroll;
+}
+
+.user-dialogue-form {
+  display: flex;
+  gap: 1em;
+  padding: 0.5em;
+  height: 12%;
+  border-top: 1px solid #c0c0c0;
+
+  & input {
+    width: 100%;
+  }
+}

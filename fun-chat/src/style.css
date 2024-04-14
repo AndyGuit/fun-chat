@@ -32,11 +32,13 @@ body {
 
 main {
   height: 100%;
+  display: flex;
+  gap: 0.5em;
 }
 
 #app {
   margin: 0 auto;
-  padding: 1rem;
+  /* padding: 1rem; */
 }
 
 .logo {

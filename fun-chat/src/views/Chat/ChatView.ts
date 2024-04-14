@@ -16,6 +16,7 @@ import {
 import Footer from '../../components/Footer/Footer';
 import { UserList } from '../../components/UserList/UserList';
 import { generateId } from '../../utils/functions';
+import UserDialogue from '../../components/UserDialogue/UserDialogue';
 
 export default class ChatView extends View {
   private router: Router;
@@ -23,6 +24,8 @@ export default class ChatView extends View {
   private api: SocketApi;
 
   private userListElement: ReturnType<typeof UserList>;
+
+  private userDialogueElement: ReturnType<typeof UserDialogue>;
 
   private userList: IUser[];
 
@@ -45,6 +48,8 @@ export default class ChatView extends View {
       handleSearchUser: this.searchUsers.bind(this),
     });
 
+    this.userDialogueElement = UserDialogue({});
+
     if (this.api.getStatus() === ReadyStateStatus.CONNETCING) {
       this.api.addOpenListener(this.requestUsers.bind(this));
     } else {
@@ -64,7 +69,7 @@ export default class ChatView extends View {
 
     const main = document.createElement('main');
 
-    main.append(this.userListElement.element);
+    main.append(this.userListElement.element, this.userDialogueElement);
 
     const footer = Footer();
 
