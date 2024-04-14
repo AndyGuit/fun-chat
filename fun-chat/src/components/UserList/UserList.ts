@@ -4,11 +4,18 @@ import { IUser } from '../../types/apiInterfaces';
 interface Props {
   users: Array<IUser>;
   currentUserName: string;
+  handleSearchUser: (e: Event) => void;
 }
 
 export function UserList(props: Props) {
   const container = document.createElement('div');
   container.classList.add('user-list-container');
+
+  const searchInput = document.createElement('input');
+  searchInput.classList.add('user-search');
+  searchInput.placeholder = 'Search...';
+  searchInput.setAttribute('type', 'text');
+  searchInput.addEventListener('input', props.handleSearchUser);
 
   const ul = document.createElement('ul');
   ul.classList.add('user-list');
@@ -29,11 +36,13 @@ export function UserList(props: Props) {
         return li;
       });
     ul.append(...liItem);
+
+    console.log('props users:', props.users);
   }
 
   renderUsers(props.users);
 
-  container.append(ul);
+  container.append(searchInput, ul);
   return {
     element: container,
     renderUsers,

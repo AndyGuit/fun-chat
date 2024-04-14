@@ -42,6 +42,7 @@ export default class ChatView extends View {
     this.userListElement = UserList({
       users: this.userList,
       currentUserName: this.userState.getName(),
+      handleSearchUser: this.searchUsers.bind(this),
     });
 
     if (this.api.getStatus() === ReadyStateStatus.CONNETCING) {
@@ -77,6 +78,18 @@ export default class ChatView extends View {
 
   handleLogout() {
     this.api.logout({ name: this.userState.getName(), password: this.userState.getPassword() });
+  }
+
+  searchUsers(e: Event) {
+    const target = e.target as HTMLInputElement;
+    const searchValue = target.value;
+
+    function filterUsers(user: IUser) {
+      if (!searchValue) return true;
+      return user.login.toLowerCase().includes(searchValue.toLowerCase());
+    }
+
+    this.userListElement.renderUsers(this.userList.filter(filterUsers));
   }
 
   getUsersListener(e: MessageEvent<string>) {

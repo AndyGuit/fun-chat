@@ -5,6 +5,11 @@
   padding: 0.5em;
 }
 
+.user-search {
+  padding: 0.5em;
+  width: 90%;
+}
+
 .user-list {
   overflow-y: scroll;
 }
