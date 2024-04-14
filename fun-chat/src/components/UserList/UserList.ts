@@ -5,6 +5,7 @@ interface Props {
   users: Array<IUser>;
   currentUserName: string;
   handleSearchUser: (e: Event) => void;
+  handleClickUser: (user: IUser) => void;
 }
 
 export function UserList(props: Props) {
@@ -19,6 +20,18 @@ export function UserList(props: Props) {
 
   const ul = document.createElement('ul');
   ul.classList.add('user-list');
+
+  ul.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement;
+    if (target.classList.contains('user-list-item')) {
+      const userData: IUser = {
+        login: target.textContent || '',
+        isLogined: target.classList.contains('active'),
+      };
+
+      props.handleClickUser(userData);
+    }
+  });
 
   function renderUsers(users: Array<IUser>) {
     while (ul.firstElementChild) {

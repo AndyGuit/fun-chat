@@ -46,6 +46,7 @@ export default class ChatView extends View {
       users: this.userList,
       currentUserName: this.userState.getName(),
       handleSearchUser: this.searchUsers.bind(this),
+      handleClickUser: this.startDialogue.bind(this),
     });
 
     this.userDialogueElement = UserDialogue({});
@@ -69,7 +70,7 @@ export default class ChatView extends View {
 
     const main = document.createElement('main');
 
-    main.append(this.userListElement.element, this.userDialogueElement);
+    main.append(this.userListElement.element, this.userDialogueElement.element);
 
     const footer = Footer();
 
@@ -83,6 +84,10 @@ export default class ChatView extends View {
 
   handleLogout() {
     this.api.logout({ name: this.userState.getName(), password: this.userState.getPassword() });
+  }
+
+  startDialogue(user: IUser) {
+    this.userDialogueElement.handleDialogue(user);
   }
 
   searchUsers(e: Event) {

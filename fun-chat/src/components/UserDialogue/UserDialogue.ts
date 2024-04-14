@@ -1,3 +1,4 @@
+import { IUser } from '../../types/apiInterfaces';
 import Button from '../Button/Button';
 import Input from '../Input/Input';
 import './UserDialogue.css';
@@ -11,7 +12,7 @@ export default function UserDialogue(props: Props) {
   const header = document.createElement('header');
   header.classList.add('user-dialogue-header');
   const selectedUserName = document.createElement('h3');
-  const selectedUserStatus = document.createElement('h3');
+  const selectedUserStatus = document.createElement('h4');
   header.append(selectedUserName, selectedUserStatus);
 
   const form = document.createElement('form');
@@ -37,6 +38,20 @@ export default function UserDialogue(props: Props) {
     input.value = '';
   });
 
+  function handleDialogue(user: IUser) {
+    dialogueChat.textContent = '';
+    while (dialogueChat.firstElementChild) {
+      dialogueChat.firstElementChild.remove();
+    }
+
+    selectedUserName.textContent = user.login;
+    selectedUserStatus.textContent = user.isLogined ? 'Online' : 'Offline';
+    selectedUserStatus.className = user.isLogined ? 'active' : 'inactive';
+  }
+
   container.append(header, dialogueChat, form);
-  return container;
+  return {
+    element: container,
+    handleDialogue,
+  };
 }
