@@ -1,5 +1,6 @@
 .chat {
   width: 95svw;
+  height: 95svh;
   display: flex;
   flex-direction: column;
   gap: 0.5em;

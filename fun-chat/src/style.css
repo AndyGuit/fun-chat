@@ -30,6 +30,10 @@ body {
   min-height: 100vh;
 }
 
+main {
+  height: 100%;
+}
+
 #app {
   margin: 0 auto;
   padding: 1rem;

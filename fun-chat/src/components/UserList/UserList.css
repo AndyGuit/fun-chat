@@ -1,5 +1,6 @@
 .user-list-container {
   width: 30%;
+  height: 100%;
   border-radius: 8px;
   border: 1px solid #c0c0c0;
   padding: 0.5em;
@@ -11,6 +12,7 @@
 }
 
 .user-list {
+  height: calc(100% - 33px);
   overflow-y: scroll;
 }
 
