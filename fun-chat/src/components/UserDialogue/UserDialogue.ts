@@ -85,6 +85,7 @@ export default function UserDialogue(props: Props) {
     console.log(messages);
 
     dialogueChat.append(...messageElements);
+    dialogueChat.scrollTo(0, dialogueChat.scrollHeight);
   }
 
   function addNewMessage(message: IMessage) {
@@ -94,6 +95,7 @@ export default function UserDialogue(props: Props) {
       from: message.from === props.senderName ? 'You' : message.from,
     });
     dialogueChat.append(card);
+    dialogueChat.scrollTo(0, dialogueChat.scrollHeight);
   }
 
   container.append(header, dialogueChat, form);
