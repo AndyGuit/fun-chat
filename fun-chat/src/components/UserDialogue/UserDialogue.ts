@@ -2,6 +2,7 @@ import { IMessage, ISendMessageRequest, IUser, MessageTypes } from '../../types/
 import { generateId } from '../../utils/functions';
 import Button from '../Button/Button';
 import Input from '../Input/Input';
+import MessageCard from '../MessageCard/MessageCard';
 import './UserDialogue.css';
 
 interface Props {
@@ -65,10 +66,7 @@ export default function UserDialogue(props: Props) {
 
   function renderMessagesHistory(messages: IMessage[]) {
     const messageElements = messages.map((msg) => {
-      const div = document.createElement('div');
-      div.textContent = msg.text;
-
-      return div;
+      return MessageCard(msg);
     });
 
     console.log(messages);

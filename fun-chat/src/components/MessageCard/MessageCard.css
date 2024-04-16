@@ -1,0 +1,30 @@
+.message-card {
+  width: 60%;
+  border-radius: 8px;
+  padding: 0.5em 1em;
+  background-color: #1a1a1a;
+  cursor: pointer;
+
+  & .from-sender {
+    align-self: flex-end;
+  }
+
+  & header {
+    display: flex;
+    font-size: 0.75em;
+    width: 100%;
+    justify-content: space-around;
+  }
+
+  & footer {
+    display: flex;
+    justify-content: flex-end;
+    font-size: 0.75em;
+  }
+}
+
+.message-text {
+  padding: 0.5em;
+  border-radius: 8px;
+  background-color: #212121;
+}
