@@ -17,7 +17,7 @@ import {
   IMessageHistoryResponse,
 } from '../../types/apiInterfaces';
 import Footer from '../../components/Footer/Footer';
-import { UserList } from '../../components/UserList/UserList';
+import UserList from '../../components/UserList/UserList';
 import { generateId } from '../../utils/functions';
 import UserDialogue from '../../components/UserDialogue/UserDialogue';
 
@@ -112,6 +112,7 @@ export default class ChatView extends View {
         },
       },
     });
+    this.userState.dialogingWith = user.login;
     this.userDialogueElement.handleDialogue(user);
   }
 
@@ -146,7 +147,7 @@ export default class ChatView extends View {
     if (data.type === MessageTypes.MSG_SEND) {
       if (
         data.payload.message.from === this.userState.getName() ||
-        data.payload.message.to === this.userState.getName()
+        data.payload.message.from === this.userState.dialogingWith
       ) {
         this.userDialogueElement.addNewMessage(data.payload.message);
       }

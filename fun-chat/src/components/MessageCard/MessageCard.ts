@@ -4,6 +4,11 @@ interface Props {
   text: string;
   from: string;
   datetime: number;
+  status: {
+    isDelivered: boolean;
+    isReaded: boolean;
+    isEdited: boolean;
+  };
 }
 
 export default function MessageCard(props: Props) {
@@ -21,16 +26,16 @@ export default function MessageCard(props: Props) {
 
   const footer = document.createElement('footer');
   const messageStatus = document.createElement('div');
-  messageStatus.textContent = 'Status';
+  messageStatus.textContent = props.status.isDelivered
+    ? props.status.isReaded
+      ? 'Readed'
+      : 'Delivered'
+    : 'Sent';
   footer.append(messageStatus);
 
   const textElement = document.createElement('div');
   textElement.classList.add('message-text');
   textElement.textContent = props.text;
-
-  // function setMessasgeStatus() {
-
-  // }
 
   element.append(header, textElement, footer);
   return element;

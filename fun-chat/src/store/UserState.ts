@@ -5,6 +5,8 @@ export default class UserState {
 
   private password: string;
 
+  dialogingWith: string;
+
   isLoggedIn: boolean;
 
   constructor() {
@@ -19,6 +21,8 @@ export default class UserState {
       this.password = '';
       this.isLoggedIn = false;
     }
+
+    this.dialogingWith = '';
   }
 
   setPassword(password: string) {

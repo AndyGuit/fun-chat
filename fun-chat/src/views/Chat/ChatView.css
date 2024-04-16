@@ -1,5 +1,6 @@
 .chat {
   width: 95svw;
+  max-width: 1100px;
   height: 95svh;
   display: flex;
   flex-direction: column;

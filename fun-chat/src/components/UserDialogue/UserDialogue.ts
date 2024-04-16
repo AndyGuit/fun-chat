@@ -35,7 +35,12 @@ export default function UserDialogue(props: Props) {
     value: '',
   });
   input.setAttribute('disabled', 'true');
-  const button = Button({ classNames: 'button', text: 'Send', type: 'submit', disabled: true });
+  const button = Button({
+    classNames: 'button',
+    text: 'Send',
+    type: 'submit',
+    disabled: true,
+  });
 
   form.append(input, button);
 
@@ -74,25 +79,26 @@ export default function UserDialogue(props: Props) {
       return;
     }
 
-    const messageElements = messages.map((msg) => {
-      return MessageCard({
+    const messageElements = messages.map((msg) =>
+      MessageCard({
         datetime: msg.datetime,
         text: msg.text,
         from: msg.from === props.senderName ? 'You' : msg.from,
-      });
-    });
-
-    console.log(messages);
+        status: msg.status,
+      }),
+    );
 
     dialogueChat.append(...messageElements);
     dialogueChat.scrollTo(0, dialogueChat.scrollHeight);
   }
 
   function addNewMessage(message: IMessage) {
+    centerText.remove();
     const card = MessageCard({
       datetime: message.datetime,
       text: message.text,
       from: message.from === props.senderName ? 'You' : message.from,
+      status: message.status,
     });
     dialogueChat.append(card);
     dialogueChat.scrollTo(0, dialogueChat.scrollHeight);

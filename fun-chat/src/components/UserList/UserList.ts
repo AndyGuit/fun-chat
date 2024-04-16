@@ -8,7 +8,7 @@ interface Props {
   handleClickUser: (user: IUser) => void;
 }
 
-export function UserList(props: Props) {
+export default function UserList(props: Props) {
   const container = document.createElement('aside');
   container.classList.add('user-list-container');
 
