@@ -6,6 +6,7 @@ import MessageCard from '../MessageCard/MessageCard';
 import './UserDialogue.css';
 
 interface Props {
+  senderName: string;
   handleSendMessage: (data: ISendMessageRequest) => void;
 }
 
@@ -66,7 +67,11 @@ export default function UserDialogue(props: Props) {
 
   function renderMessagesHistory(messages: IMessage[]) {
     const messageElements = messages.map((msg) => {
-      return MessageCard(msg);
+      return MessageCard({
+        datetime: msg.datetime,
+        text: msg.text,
+        from: msg.from === props.senderName ? 'You' : msg.from,
+      });
     });
 
     console.log(messages);
@@ -74,10 +79,20 @@ export default function UserDialogue(props: Props) {
     dialogueChat.append(...messageElements);
   }
 
+  function addNewMessage(message: IMessage) {
+    const card = MessageCard({
+      datetime: message.datetime,
+      text: message.text,
+      from: message.from === props.senderName ? 'You' : message.from,
+    });
+    dialogueChat.append(card);
+  }
+
   container.append(header, dialogueChat, form);
   return {
     element: container,
     handleDialogue,
     renderMessagesHistory,
+    addNewMessage,
   };
 }

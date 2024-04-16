@@ -53,6 +53,7 @@ export default class ChatView extends View {
     });
 
     this.userDialogueElement = UserDialogue({
+      senderName: this.userState.getName(),
       handleSendMessage: this.sendMessage.bind(this),
     });
 
@@ -145,8 +146,11 @@ export default class ChatView extends View {
     const data: ISendMessageResponse = JSON.parse(e.data);
 
     if (data.type === MessageTypes.MSG_SEND) {
-      console.log(data);
-      if (data.payload.message.to === this.userState.getName()) {
+      if (
+        data.payload.message.from === this.userState.getName() ||
+        data.payload.message.to === this.userState.getName()
+      ) {
+        this.userDialogueElement.addNewMessage(data.payload.message);
       }
     }
   }

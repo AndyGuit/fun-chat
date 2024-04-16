@@ -4,4 +4,8 @@
   display: flex;
   flex-direction: column;
   gap: 0.5em;
+
+  & main {
+    height: 74svh;
+  }
 }
