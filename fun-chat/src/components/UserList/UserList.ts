@@ -41,10 +41,16 @@ export default function UserList(props: Props) {
     const liItem = users
       .filter((user) => user.login !== props.currentUserName)
       .map((user) => {
+        const unreadMessagesElement = document.createElement('div');
+        unreadMessagesElement.classList.add('unread');
+        unreadMessagesElement.textContent = '10';
+
         const li = document.createElement('li');
         const activeClass = user.isLogined ? 'active' : 'inactive';
         li.classList.add('user-list-item', activeClass);
         li.textContent = user.login;
+
+        li.append(unreadMessagesElement);
 
         return li;
       });
