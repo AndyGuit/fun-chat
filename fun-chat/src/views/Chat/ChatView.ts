@@ -130,8 +130,6 @@ export default class ChatView extends View {
   getUsersListener(e: MessageEvent<string>) {
     const data: IUserActiveResponse | IUserInactiveResponse = JSON.parse(e.data);
 
-    // console.log(data);
-
     if (data.type === MessageTypes.USER_ACTIVE) {
       this.userList = [...this.userList, ...data.payload.users];
     }
@@ -146,10 +144,11 @@ export default class ChatView extends View {
     const data: ISendMessageResponse = JSON.parse(e.data);
 
     if (data.type === MessageTypes.MSG_SEND) {
-      if (
-        data.payload.message.from === this.userState.getName() ||
-        data.payload.message.to === this.userState.getName()
-      ) {
+      if (data.payload.message.to === this.userState.getName()) {
+        console.log('you got the message');
+      }
+
+      if (data.payload.message.from === this.userState.getName()) {
         this.userDialogueElement.addNewMessage(data.payload.message);
       }
     }

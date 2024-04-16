@@ -25,3 +25,9 @@ export function deleteLoginData() {
 export function generateId() {
   return window.crypto.randomUUID();
 }
+
+export function removeChildElements<T extends HTMLElement>(parent: T) {
+  while (parent.firstElementChild) {
+    parent.firstElementChild.remove();
+  }
+}

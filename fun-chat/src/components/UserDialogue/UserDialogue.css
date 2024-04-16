@@ -26,18 +26,18 @@
 
 .user-dialogue-chat {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
   gap: 0.25em;
   height: 100%;
   overflow-y: scroll;
   padding: 0.5em;
+}
 
-  &.dialog-started {
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-  }
+.dialogue-text-center {
+  align-self: center;
+  margin: auto 0;
 }
 
 .user-dialogue-form {

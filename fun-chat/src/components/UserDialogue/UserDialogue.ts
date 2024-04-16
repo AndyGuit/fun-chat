@@ -1,5 +1,5 @@
 import { IMessage, ISendMessageRequest, IUser, MessageTypes } from '../../types/apiInterfaces';
-import { generateId } from '../../utils/functions';
+import { generateId, removeChildElements } from '../../utils/functions';
 import Button from '../Button/Button';
 import Input from '../Input/Input';
 import MessageCard from '../MessageCard/MessageCard';
@@ -24,7 +24,10 @@ export default function UserDialogue(props: Props) {
   form.classList.add('user-dialogue-form');
   const dialogueChat = document.createElement('div');
   dialogueChat.classList.add('user-dialogue-chat');
-  dialogueChat.textContent = 'Select user to start chating';
+  const centerText = document.createElement('div');
+  centerText.classList.add('dialogue-text-center');
+  centerText.textContent = 'Select user to start chating';
+  dialogueChat.append(centerText);
 
   const input = Input({
     classNames: 'input',
@@ -54,9 +57,6 @@ export default function UserDialogue(props: Props) {
   });
 
   function handleDialogue(user: IUser) {
-    dialogueChat.textContent = '';
-    dialogueChat.classList.add('dialog-started');
-
     selectedUserName.textContent = user.login;
     selectedUserStatus.textContent = user.isLogined ? 'Online' : 'Offline';
     selectedUserStatus.className = user.isLogined ? 'active' : 'inactive';
@@ -66,6 +66,14 @@ export default function UserDialogue(props: Props) {
   }
 
   function renderMessagesHistory(messages: IMessage[]) {
+    removeChildElements(dialogueChat);
+
+    if (messages.length === 0) {
+      dialogueChat.append(centerText);
+      centerText.textContent = 'Write your first message.';
+      return;
+    }
+
     const messageElements = messages.map((msg) => {
       return MessageCard({
         datetime: msg.datetime,
