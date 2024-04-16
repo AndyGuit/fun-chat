@@ -29,7 +29,7 @@
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  scroll-behavior: smooth;
+  /* scroll-behavior: smooth; */
   gap: 0.25em;
   height: 100%;
   overflow-y: scroll;

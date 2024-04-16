@@ -15,6 +15,8 @@ import {
   ISendMessageRequest,
   ISendMessageResponse,
   IMessageHistoryResponse,
+  IMessageReadStatusChangeResponse,
+  IMessage,
 } from '../../types/apiInterfaces';
 import Footer from '../../components/Footer/Footer';
 import UserList from '../../components/UserList/UserList';
@@ -32,17 +34,17 @@ export default class ChatView extends View {
 
   private userList: IUser[];
 
+  private userMessages: IMessage[];
+
   private userState: UserState;
 
   constructor(router: Router, api: SocketApi, userState: UserState) {
     super('div', 'chat');
 
     this.router = router;
-
     this.api = api;
-
     this.userState = userState;
-
+    this.userMessages = [];
     this.userList = [];
 
     this.userListElement = UserList({
@@ -55,6 +57,7 @@ export default class ChatView extends View {
     this.userDialogueElement = UserDialogue({
       senderName: this.userState.getName(),
       handleSendMessage: this.sendMessage.bind(this),
+      handleChangeMessageToReaded: this.changeMessageStatusToReaded.bind(this),
     });
 
     if (this.api.getStatus() === ReadyStateStatus.CONNETCING) {
@@ -68,6 +71,7 @@ export default class ChatView extends View {
   }
 
   addApiListeners() {
+    this.api.addMessageListener(this.messageToReadedStatusListener.bind(this));
     this.api.addMessageListener(this.messagesHistoryListener.bind(this));
     this.api.addMessageListener(this.getMessageListener.bind(this));
     this.api.addMessageListener(this.getUsersListener.bind(this));
@@ -100,6 +104,18 @@ export default class ChatView extends View {
 
   handleLogout() {
     this.api.logout({ name: this.userState.getName(), password: this.userState.getPassword() });
+  }
+
+  changeMessageStatusToReaded(messageId: string) {
+    this.api.send({
+      type: MessageTypes.MSG_READ,
+      id: generateId(),
+      payload: {
+        message: {
+          id: messageId,
+        },
+      },
+    });
   }
 
   startDialogue(user: IUser) {
@@ -158,7 +174,20 @@ export default class ChatView extends View {
     const data: IMessageHistoryResponse = JSON.parse(e.data);
 
     if (data.type === MessageTypes.MSG_FROM_USER) {
+      this.userMessages = data.payload.messages;
       this.userDialogueElement.renderMessagesHistory(data.payload.messages);
+    }
+  }
+
+  messageToReadedStatusListener(e: MessageEvent<string>) {
+    const data: IMessageReadStatusChangeResponse = JSON.parse(e.data);
+
+    if (data.type === MessageTypes.MSG_READ) {
+      this.userMessages = this.userMessages.map((msg) => {
+        return { ...msg, status: { ...msg.status, isReaded: true } };
+      });
+
+      this.userDialogueElement.renderMessagesHistory(this.userMessages);
     }
   }
 
@@ -174,7 +203,7 @@ export default class ChatView extends View {
     }
 
     if (data.type === MessageTypes.ERROR) {
-      console.log(data);
+      console.error(data);
     }
   }
 }

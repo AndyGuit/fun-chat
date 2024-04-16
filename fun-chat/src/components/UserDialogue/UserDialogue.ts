@@ -8,6 +8,7 @@ import './UserDialogue.css';
 interface Props {
   senderName: string;
   handleSendMessage: (data: ISendMessageRequest) => void;
+  handleChangeMessageToReaded: (id: string) => void;
 }
 
 export default function UserDialogue(props: Props) {
@@ -48,8 +49,27 @@ export default function UserDialogue(props: Props) {
 
   form.append(input, button);
 
+  let ignoreScroll = true;
+  let unreadMessages: IMessage[] = [];
+
+  function handleReadMessage() {
+    if (ignoreScroll || !unreadMessages.length) return;
+    unreadMessages.forEach((message) => {
+      if (message.from !== props.senderName) {
+        props.handleChangeMessageToReaded(message.id);
+      }
+    });
+  }
+
+  dialogueChat.addEventListener('click', handleReadMessage);
+  dialogueChat.addEventListener('scroll', handleReadMessage);
+
   form.addEventListener('submit', (e) => {
     e.preventDefault();
+
+    if (input.value.trim() === '') return;
+
+    handleReadMessage();
 
     props.handleSendMessage({
       id: generateId(),
@@ -75,6 +95,7 @@ export default function UserDialogue(props: Props) {
   }
 
   function renderMessagesHistory(messages: IMessage[]) {
+    ignoreScroll = true;
     removeChildElements(dialogueChat);
 
     let firstNewMessageIndex = -1;
@@ -85,8 +106,10 @@ export default function UserDialogue(props: Props) {
       return;
     }
 
+    unreadMessages = messages.filter((msg) => !msg.status.isReaded);
+
     const messageElements = messages.map((msg, index) => {
-      if (!msg.status.isReaded) {
+      if (!msg.status.isReaded && msg.from !== props.senderName) {
         firstNewMessageIndex = firstNewMessageIndex > -1 ? firstNewMessageIndex : index;
       }
 
@@ -104,6 +127,7 @@ export default function UserDialogue(props: Props) {
 
     dialogueChat.append(...messageElements);
     dialogueChat.scrollTo(0, dialogueChat.scrollHeight);
+    setTimeout(() => (ignoreScroll = false), 100);
   }
 
   function addNewMessage(message: IMessage) {
@@ -114,8 +138,14 @@ export default function UserDialogue(props: Props) {
       from: message.from === props.senderName ? 'You' : message.from,
       status: message.status,
     });
+    if (message.from !== props.senderName) {
+      unreadMessages.push(message);
+      dialogueChat.append(unreadMessagesSeparator);
+    }
+    ignoreScroll = true;
     dialogueChat.append(card);
     dialogueChat.scrollTo(0, dialogueChat.scrollHeight);
+    setTimeout(() => (ignoreScroll = false), 100);
   }
 
   container.append(header, dialogueChat, form);

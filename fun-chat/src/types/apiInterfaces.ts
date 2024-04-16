@@ -6,6 +6,7 @@ export enum MessageTypes {
   ERROR = 'ERROR',
   MSG_SEND = 'MSG_SEND',
   MSG_FROM_USER = 'MSG_FROM_USER',
+  MSG_READ = 'MSG_READ',
 }
 
 export enum ReadyStateStatus {
@@ -124,6 +125,29 @@ export interface IMessageHistoryResponse {
   };
 }
 
+export interface IMessageReadStatusChange {
+  id: string;
+  type: MessageTypes.MSG_READ;
+  payload: {
+    message: {
+      id: string;
+    };
+  };
+}
+
+export interface IMessageReadStatusChangeResponse {
+  id: null;
+  type: MessageTypes.MSG_READ;
+  payload: {
+    message: {
+      id: string;
+      status: {
+        isReaded: boolean;
+      };
+    };
+  };
+}
+
 export interface IUser {
   login: string;
   isLogined: boolean;
@@ -157,9 +181,11 @@ export type TMessages =
   | IUserActiveRequest
   | IUserInactiveRequest
   | ISendMessageRequest
-  | IMessageHistoryRequest;
+  | IMessageHistoryRequest
+  | IMessageReadStatusChange;
 
 export type TServerResponses =
   | IUserAuthSuccessResponse
   | IUserLogoutSuccessResponse
+  | IMessageReadStatusChangeResponse
   | IErrorResponse;
