@@ -165,6 +165,7 @@ export default class ChatView extends View {
         data.payload.message.from === this.userState.getName() ||
         data.payload.message.from === this.userState.dialogingWith
       ) {
+        this.userMessages.push(data.payload.message);
         this.userDialogueElement.addNewMessage(data.payload.message);
       }
     }
