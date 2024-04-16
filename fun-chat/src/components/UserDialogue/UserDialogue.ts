@@ -77,24 +77,32 @@ export default function UserDialogue(props: Props) {
   function renderMessagesHistory(messages: IMessage[]) {
     removeChildElements(dialogueChat);
 
+    let firstNewMessageIndex = -1;
+
     if (messages.length === 0) {
       dialogueChat.append(centerText);
       centerText.textContent = 'Write your first message.';
       return;
     }
 
-    console.log(messages);
+    const messageElements = messages.map((msg, index) => {
+      if (!msg.status.isReaded) {
+        firstNewMessageIndex = firstNewMessageIndex > -1 ? firstNewMessageIndex : index;
+      }
 
-    const messageElements = messages.map((msg) =>
-      MessageCard({
+      return MessageCard({
         datetime: msg.datetime,
         text: msg.text,
         from: msg.from === props.senderName ? 'You' : msg.from,
         status: msg.status,
-      }),
-    );
+      });
+    });
 
-    dialogueChat.append(unreadMessagesSeparator, ...messageElements);
+    if (firstNewMessageIndex > -1) {
+      messageElements.splice(firstNewMessageIndex, 0, unreadMessagesSeparator);
+    }
+
+    dialogueChat.append(...messageElements);
     dialogueChat.scrollTo(0, dialogueChat.scrollHeight);
   }
 
