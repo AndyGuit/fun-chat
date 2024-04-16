@@ -52,3 +52,19 @@
     width: 100%;
   }
 }
+
+.new-messages {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &::before,
+  &::after {
+    content: '';
+    width: 35%;
+    margin: 0 1em;
+    height: 1px;
+    background: white;
+  }
+}

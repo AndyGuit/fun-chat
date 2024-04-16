@@ -29,6 +29,10 @@ export default function UserDialogue(props: Props) {
   centerText.textContent = 'Select user to start chating';
   dialogueChat.append(centerText);
 
+  const unreadMessagesSeparator = document.createElement('div');
+  unreadMessagesSeparator.classList.add('new-messages');
+  unreadMessagesSeparator.textContent = 'New Messages';
+
   const input = Input({
     classNames: 'input',
     type: 'text',
@@ -79,6 +83,8 @@ export default function UserDialogue(props: Props) {
       return;
     }
 
+    console.log(messages);
+
     const messageElements = messages.map((msg) =>
       MessageCard({
         datetime: msg.datetime,
@@ -88,7 +94,7 @@ export default function UserDialogue(props: Props) {
       }),
     );
 
-    dialogueChat.append(...messageElements);
+    dialogueChat.append(unreadMessagesSeparator, ...messageElements);
     dialogueChat.scrollTo(0, dialogueChat.scrollHeight);
   }
 

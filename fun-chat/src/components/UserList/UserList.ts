@@ -43,7 +43,7 @@ export default function UserList(props: Props) {
       .map((user) => {
         const unreadMessagesElement = document.createElement('div');
         unreadMessagesElement.classList.add('unread');
-        unreadMessagesElement.textContent = '10';
+        // unreadMessagesElement.textContent = '10';
 
         const li = document.createElement('li');
         const activeClass = user.isLogined ? 'active' : 'inactive';
