@@ -17,6 +17,8 @@ import {
   IMessageHistoryResponse,
   IMessageReadStatusChangeResponse,
   IMessage,
+  IMessageDeleteRequest,
+  IMessageDeleteResponse,
 } from '../../types/apiInterfaces';
 import Footer from '../../components/Footer/Footer';
 import UserList from '../../components/UserList/UserList';
@@ -58,6 +60,7 @@ export default class ChatView extends View {
       senderName: this.userState.getName(),
       handleSendMessage: this.sendMessage.bind(this),
       handleChangeMessageToReaded: this.changeMessageStatusToReaded.bind(this),
+      handleDeleteMessage: this.deleteMessage.bind(this),
     });
 
     if (this.api.getStatus() === ReadyStateStatus.CONNETCING) {
@@ -71,6 +74,7 @@ export default class ChatView extends View {
   }
 
   addApiListeners() {
+    this.api.addMessageListener(this.deleteMessageListener.bind(this));
     this.api.addMessageListener(this.messageToReadedStatusListener.bind(this));
     this.api.addMessageListener(this.messagesHistoryListener.bind(this));
     this.api.addMessageListener(this.getMessageListener.bind(this));
@@ -94,6 +98,19 @@ export default class ChatView extends View {
   }
 
   sendMessage(data: ISendMessageRequest) {
+    this.api.send(data);
+  }
+
+  deleteMessage(messageId: string) {
+    const data: IMessageDeleteRequest = {
+      id: generateId(),
+      type: MessageTypes.MSG_DELETE,
+      payload: {
+        message: {
+          id: messageId,
+        },
+      },
+    };
     this.api.send(data);
   }
 
@@ -189,6 +206,20 @@ export default class ChatView extends View {
       });
 
       this.userDialogueElement.renderMessagesHistory(this.userMessages);
+    }
+  }
+
+  deleteMessageListener(e: MessageEvent<string>) {
+    const data: IMessageDeleteResponse = JSON.parse(e.data);
+
+    if (data.type === MessageTypes.MSG_DELETE) {
+      if (data.payload.message.status.isDeleted) {
+        this.userMessages = this.userMessages.filter((message) => {
+          return message.id !== data.payload.message.id;
+        });
+
+        this.userDialogueElement.renderMessagesHistory(this.userMessages);
+      }
     }
   }
 

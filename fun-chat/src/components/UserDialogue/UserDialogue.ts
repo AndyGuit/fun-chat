@@ -10,6 +10,7 @@ interface Props {
   senderName: string;
   handleSendMessage: (data: ISendMessageRequest) => void;
   handleChangeMessageToReaded: (id: string) => void;
+  handleDeleteMessage: (messageId: string) => void;
 }
 
 export default function UserDialogue(props: Props) {
@@ -89,12 +90,15 @@ export default function UserDialogue(props: Props) {
 
   function removeContextMenu(e: MouseEvent) {
     const target = e.target as HTMLElement;
+    const messageId = target.parentElement?.parentElement?.getAttribute('data-id');
 
     if (target.classList.contains('edit')) {
+      console.log(messageId);
       console.log('edit message');
     }
 
     if (target.classList.contains('delete')) {
+      if (messageId) props.handleDeleteMessage(messageId);
       console.log('delete message');
     }
 
