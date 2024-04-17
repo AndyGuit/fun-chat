@@ -1,6 +1,8 @@
+import ContextMenu from '../ContextMenu/ContextMenu';
 import './MessageCard.css';
 
 interface Props {
+  id: string;
   text: string;
   from: string;
   datetime: number;
@@ -14,6 +16,8 @@ interface Props {
 export default function MessageCard(props: Props) {
   const element = document.createElement('div');
   element.classList.add('message-card');
+  element.setAttribute('data-id', props.id);
+  const contextMenu = ContextMenu();
 
   if (props.from === 'You') element.classList.add('from-sender');
 
@@ -36,6 +40,30 @@ export default function MessageCard(props: Props) {
   const textElement = document.createElement('div');
   textElement.classList.add('message-text');
   textElement.textContent = props.text;
+
+  function removeContextMenu(e: MouseEvent) {
+    const target = e.target as HTMLElement;
+
+    if (target.classList.contains('edit')) {
+      console.log('edit message');
+    }
+
+    if (target.classList.contains('delete')) {
+      console.log('delete message');
+    }
+
+    contextMenu.remove();
+    document.body.removeEventListener('click', removeContextMenu);
+  }
+
+  element.addEventListener('contextmenu', (e) => {
+    e.preventDefault();
+    if (props.from !== 'You') return;
+
+    element.append(contextMenu);
+
+    document.body.addEventListener('click', removeContextMenu);
+  });
 
   element.append(header, textElement, footer);
   return element;

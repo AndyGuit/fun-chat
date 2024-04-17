@@ -1,0 +1,21 @@
+.context-menu {
+  position: absolute;
+  max-width: 200px;
+  width: 100%;
+  top: 15px;
+  left: -50px;
+  list-style: none;
+  padding: 0.5em;
+  border: 1px solid #c0c0c0;
+  border-radius: 8px;
+  background-color: #151313;
+
+  & .context-menu-item {
+    padding: 0.2em;
+    border-radius: 8px;
+
+    &:hover {
+      background-color: #464646;
+    }
+  }
+}

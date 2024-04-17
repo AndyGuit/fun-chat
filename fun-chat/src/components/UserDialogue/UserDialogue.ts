@@ -114,6 +114,7 @@ export default function UserDialogue(props: Props) {
       }
 
       return MessageCard({
+        id: msg.id,
         datetime: msg.datetime,
         text: msg.text,
         from: msg.from === props.senderName ? 'You' : msg.from,
@@ -133,6 +134,7 @@ export default function UserDialogue(props: Props) {
   function addNewMessage(message: IMessage) {
     centerText.remove();
     const card = MessageCard({
+      id: message.id,
       datetime: message.datetime,
       text: message.text,
       from: message.from === props.senderName ? 'You' : message.from,
