@@ -1,6 +1,7 @@
 import { IMessage, ISendMessageRequest, IUser, MessageTypes } from '../../types/apiInterfaces';
 import { generateId, removeChildElements } from '../../utils/functions';
 import Button from '../Button/Button';
+import ContextMenu from '../ContextMenu/ContextMenu';
 import Input from '../Input/Input';
 import MessageCard from '../MessageCard/MessageCard';
 import './UserDialogue.css';
@@ -21,6 +22,7 @@ export default function UserDialogue(props: Props) {
   const selectedUserStatus = document.createElement('h4');
   header.append(selectedUserName, selectedUserStatus);
 
+  const contextMenu = ContextMenu();
   const form = document.createElement('form');
   form.classList.add('user-dialogue-form');
   const dialogueChat = document.createElement('div');
@@ -85,6 +87,36 @@ export default function UserDialogue(props: Props) {
     input.value = '';
   });
 
+  function removeContextMenu(e: MouseEvent) {
+    const target = e.target as HTMLElement;
+
+    if (target.classList.contains('edit')) {
+      console.log('edit message');
+    }
+
+    if (target.classList.contains('delete')) {
+      console.log('delete message');
+    }
+
+    contextMenu.remove();
+    document.body.removeEventListener('click', removeContextMenu);
+  }
+
+  container.addEventListener('contextmenu', (e) => {
+    e.preventDefault();
+
+    const target = e.target as HTMLElement;
+
+    const messageCardElement = target.closest('.message-card');
+
+    if (!messageCardElement) return;
+    if (!messageCardElement.classList.contains('from-sender')) return;
+
+    messageCardElement.append(contextMenu);
+
+    document.body.addEventListener('click', removeContextMenu);
+  });
+
   function handleDialogue(user: IUser) {
     selectedUserName.textContent = user.login;
     selectedUserStatus.textContent = user.isLogined ? 'Online' : 'Offline';
@@ -128,7 +160,9 @@ export default function UserDialogue(props: Props) {
 
     dialogueChat.append(...messageElements);
     dialogueChat.scrollTo(0, dialogueChat.scrollHeight);
-    setTimeout(() => (ignoreScroll = false), 100);
+    setTimeout(() => {
+      ignoreScroll = false;
+    }, 100);
   }
 
   function addNewMessage(message: IMessage) {
@@ -147,7 +181,9 @@ export default function UserDialogue(props: Props) {
     ignoreScroll = true;
     dialogueChat.append(card);
     dialogueChat.scrollTo(0, dialogueChat.scrollHeight);
-    setTimeout(() => (ignoreScroll = false), 100);
+    setTimeout(() => {
+      ignoreScroll = false;
+    }, 100);
   }
 
   container.append(header, dialogueChat, form);
