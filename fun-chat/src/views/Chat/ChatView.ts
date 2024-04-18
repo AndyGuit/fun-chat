@@ -155,17 +155,10 @@ export default class ChatView extends View {
   }
 
   startDialogue(user: IUser) {
-    this.api.send({
-      id: generateId(),
-      type: MessageTypes.MSG_FROM_USER,
-      payload: {
-        user: {
-          login: user.login,
-        },
-      },
-    });
     this.userState.dialogingWith = user.login;
+    const dialogHistory = this.userState.getUserDialogingWithHistory();
     this.userDialogueElement.handleDialogue(user);
+    this.userDialogueElement.renderMessagesHistory(dialogHistory);
   }
 
   searchUsers(e: Event) {
@@ -190,7 +183,24 @@ export default class ChatView extends View {
     if (data.type === MessageTypes.USER_INACTIVE) {
       this.userState.usersList = [...this.userState.usersList, ...data.payload.users];
       this.userListElement.renderUsers(this.userState.usersList);
+      this.getAllMessagesHistory();
     }
+  }
+
+  getAllMessagesHistory() {
+    this.userState.usersList.forEach((user) => {
+      if (user.login === this.userState.getName()) return;
+
+      this.api.send({
+        type: MessageTypes.MSG_FROM_USER,
+        id: generateId(),
+        payload: {
+          user: {
+            login: user.login,
+          },
+        },
+      });
+    });
   }
 
   getMessageListener(e: MessageEvent<string>) {
@@ -201,7 +211,7 @@ export default class ChatView extends View {
         data.payload.message.from === this.userState.getName() ||
         data.payload.message.from === this.userState.dialogingWith
       ) {
-        this.userMessages.push(data.payload.message);
+        this.userState.messageHistory.push(data.payload.message);
         this.userDialogueElement.addNewMessage(data.payload.message);
       }
     }
@@ -211,8 +221,7 @@ export default class ChatView extends View {
     const data: IMessageHistoryResponse = JSON.parse(e.data);
 
     if (data.type === MessageTypes.MSG_FROM_USER) {
-      this.userMessages = data.payload.messages;
-      this.userDialogueElement.renderMessagesHistory(data.payload.messages);
+      this.userState.messageHistory.push(...data.payload.messages);
     }
   }
 

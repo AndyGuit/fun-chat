@@ -1,4 +1,4 @@
-import { IUser } from '../types/apiInterfaces';
+import { IMessage, IUser } from '../types/apiInterfaces';
 import { getLoginData } from '../utils/functions';
 
 export default class UserState {
@@ -7,6 +7,8 @@ export default class UserState {
   private password: string;
 
   usersList: Array<IUser>;
+
+  messageHistory: Array<IMessage>;
 
   dialogingWith: string;
 
@@ -27,6 +29,7 @@ export default class UserState {
 
     this.dialogingWith = '';
     this.usersList = [];
+    this.messageHistory = [];
   }
 
   setPassword(password: string) {
@@ -43,5 +46,19 @@ export default class UserState {
 
   getName() {
     return this.name;
+  }
+
+  getUserDialogingWithHistory() {
+    return this.messageHistory.filter((message) => {
+      if (message.from === this.getName() && message.to === this.dialogingWith) {
+        return true;
+      }
+
+      if (message.to === this.getName() && message.from === this.dialogingWith) {
+        return true;
+      }
+
+      return false;
+    });
   }
 }
