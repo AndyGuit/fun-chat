@@ -1,9 +1,12 @@
+import { IUser } from '../types/apiInterfaces';
 import { getLoginData } from '../utils/functions';
 
 export default class UserState {
   private name: string;
 
   private password: string;
+
+  usersList: Array<IUser>;
 
   dialogingWith: string;
 
@@ -23,6 +26,7 @@ export default class UserState {
     }
 
     this.dialogingWith = '';
+    this.usersList = [];
   }
 
   setPassword(password: string) {

@@ -57,7 +57,7 @@ export default function UserDialogue(props: Props) {
   let unreadMessages: IMessage[] = [];
 
   function handleReadMessage() {
-    if (ignoreScroll || !unreadMessages.length) return;
+    if (ignoreScroll || unreadMessages.length === 0) return;
     unreadMessages.forEach((message) => {
       if (message.from !== props.senderName) {
         props.handleChangeMessageToReaded(message.id);
@@ -86,7 +86,7 @@ export default function UserDialogue(props: Props) {
       return;
     }
 
-    handleReadMessage();
+    // handleReadMessage();
 
     props.handleSendMessage({
       id: generateId(),

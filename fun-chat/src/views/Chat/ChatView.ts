@@ -38,8 +38,6 @@ export default class ChatView extends View {
 
   private userDialogueElement: ReturnType<typeof UserDialogue>;
 
-  private userList: IUser[];
-
   private userMessages: IMessage[];
 
   private userState: UserState;
@@ -51,10 +49,9 @@ export default class ChatView extends View {
     this.api = api;
     this.userState = userState;
     this.userMessages = [];
-    this.userList = [];
 
     this.userListElement = UserList({
-      users: this.userList,
+      users: this.userState.usersList,
       currentUserName: this.userState.getName(),
       handleSearchUser: this.searchUsers.bind(this),
       handleClickUser: this.startDialogue.bind(this),
@@ -180,19 +177,19 @@ export default class ChatView extends View {
       return user.login.toLowerCase().includes(searchValue.toLowerCase());
     }
 
-    this.userListElement.renderUsers(this.userList.filter(filterUsers));
+    this.userListElement.renderUsers(this.userState.usersList.filter(filterUsers));
   }
 
   getUsersListener(e: MessageEvent<string>) {
     const data: IUserActiveResponse | IUserInactiveResponse = JSON.parse(e.data);
 
     if (data.type === MessageTypes.USER_ACTIVE) {
-      this.userList = [...this.userList, ...data.payload.users];
+      this.userState.usersList = [...this.userState.usersList, ...data.payload.users];
     }
 
     if (data.type === MessageTypes.USER_INACTIVE) {
-      this.userList = [...this.userList, ...data.payload.users];
-      this.userListElement.renderUsers(this.userList);
+      this.userState.usersList = [...this.userState.usersList, ...data.payload.users];
+      this.userListElement.renderUsers(this.userState.usersList);
     }
   }
 
@@ -294,24 +291,26 @@ export default class ChatView extends View {
       data.type === MessageTypes.USER_EXTERNAL_LOGIN ||
       data.type === MessageTypes.USER_EXTERNAL_LOGOUT
     ) {
-      const isUserInList = this.userList.some((user) => user.login === data.payload.user.login);
+      const isUserInList = this.userState.usersList.some(
+        (user) => user.login === data.payload.user.login,
+      );
 
       if (isUserInList) {
-        this.userList = this.userList.map((user) => {
+        this.userState.usersList = this.userState.usersList.map((user) => {
           if (data.payload.user.login === user.login) {
             user.isLogined = data.payload.user.isLogined;
           }
           return user;
         });
       } else {
-        this.userList.push(data.payload.user);
+        this.userState.usersList.push(data.payload.user);
       }
 
       if (this.userState.dialogingWith === data.payload.user.login) {
         this.userDialogueElement.setUserDialogueStatus(data.payload.user.isLogined);
       }
 
-      this.userListElement.renderUsers(this.userList);
+      this.userListElement.renderUsers(this.userState.usersList);
     }
   }
 
