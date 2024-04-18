@@ -1,4 +1,10 @@
-import { IMessage, ISendMessageRequest, IUser, MessageTypes } from '../../types/apiInterfaces';
+import {
+  IMessage,
+  IMessageEditRequest,
+  ISendMessageRequest,
+  IUser,
+  MessageTypes,
+} from '../../types/apiInterfaces';
 import { generateId, removeChildElements } from '../../utils/functions';
 import Button from '../Button/Button';
 import ContextMenu from '../ContextMenu/ContextMenu';
@@ -11,6 +17,7 @@ interface Props {
   handleSendMessage: (data: ISendMessageRequest) => void;
   handleChangeMessageToReaded: (id: string) => void;
   handleDeleteMessage: (messageId: string) => void;
+  handleEditMessage: (messageId: string, text: string) => void;
 }
 
 export default function UserDialogue(props: Props) {
@@ -70,7 +77,16 @@ export default function UserDialogue(props: Props) {
   form.addEventListener('submit', (e) => {
     e.preventDefault();
 
+    const messageToEditId = form.getAttribute('data-message-edit-id');
+
     if (input.value.trim() === '') return;
+
+    if (messageToEditId) {
+      props.handleEditMessage(messageToEditId, input.value);
+      form.removeAttribute('data-message-edit-id');
+      input.value = '';
+      return;
+    }
 
     handleReadMessage();
 
@@ -91,15 +107,17 @@ export default function UserDialogue(props: Props) {
   function removeContextMenu(e: MouseEvent) {
     const target = e.target as HTMLElement;
     const messageId = target.parentElement?.parentElement?.getAttribute('data-id');
+    const messageText = target.parentElement?.parentElement?.getAttribute('data-text');
 
     if (target.classList.contains('edit')) {
-      console.log(messageId);
+      if (messageText) input.value = messageText;
+      if (messageId) form.setAttribute('data-message-edit-id', messageId);
+
       console.log('edit message');
     }
 
     if (target.classList.contains('delete')) {
       if (messageId) props.handleDeleteMessage(messageId);
-      console.log('delete message');
     }
 
     contextMenu.remove();

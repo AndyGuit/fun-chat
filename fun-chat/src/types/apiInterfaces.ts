@@ -8,6 +8,7 @@ export enum MessageTypes {
   MSG_FROM_USER = 'MSG_FROM_USER',
   MSG_READ = 'MSG_READ',
   MSG_DELETE = 'MSG_DELETE',
+  MSG_EDIT = 'MSG_EDIT',
 }
 
 export enum ReadyStateStatus {
@@ -172,6 +173,31 @@ export interface IMessageReadStatusChangeResponse {
   };
 }
 
+export interface IMessageEditRequest {
+  id: string;
+  type: MessageTypes.MSG_EDIT;
+  payload: {
+    message: {
+      id: string;
+      text: string;
+    };
+  };
+}
+
+export interface IMessageEditResponse {
+  id: null;
+  type: MessageTypes.MSG_EDIT;
+  payload: {
+    message: {
+      id: string;
+      text: string;
+      status: {
+        isEdited: boolean;
+      };
+    };
+  };
+}
+
 export interface IUser {
   login: string;
   isLogined: boolean;
@@ -207,7 +233,8 @@ export type TMessages =
   | ISendMessageRequest
   | IMessageHistoryRequest
   | IMessageReadStatusChange
-  | IMessageDeleteRequest;
+  | IMessageDeleteRequest
+  | IMessageEditRequest;
 /* TODO: remove this type */
 export type TServerResponses =
   | IUserAuthSuccessResponse

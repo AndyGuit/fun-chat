@@ -16,6 +16,7 @@ export default function MessageCard(props: Props) {
   const element = document.createElement('div');
   element.classList.add('message-card');
   element.setAttribute('data-id', props.id);
+  element.setAttribute('data-text', props.text);
 
   if (props.from === 'You') element.classList.add('from-sender');
 

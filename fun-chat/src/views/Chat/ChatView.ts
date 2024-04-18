@@ -19,6 +19,8 @@ import {
   IMessage,
   IMessageDeleteRequest,
   IMessageDeleteResponse,
+  IMessageEditRequest,
+  IMessageEditResponse,
 } from '../../types/apiInterfaces';
 import Footer from '../../components/Footer/Footer';
 import UserList from '../../components/UserList/UserList';
@@ -61,6 +63,7 @@ export default class ChatView extends View {
       handleSendMessage: this.sendMessage.bind(this),
       handleChangeMessageToReaded: this.changeMessageStatusToReaded.bind(this),
       handleDeleteMessage: this.deleteMessage.bind(this),
+      handleEditMessage: this.editMessage.bind(this),
     });
 
     if (this.api.getStatus() === ReadyStateStatus.CONNETCING) {
@@ -74,6 +77,7 @@ export default class ChatView extends View {
   }
 
   addApiListeners() {
+    this.api.addMessageListener(this.editMessageListener.bind(this));
     this.api.addMessageListener(this.deleteMessageListener.bind(this));
     this.api.addMessageListener(this.messageToReadedStatusListener.bind(this));
     this.api.addMessageListener(this.messagesHistoryListener.bind(this));
@@ -108,6 +112,20 @@ export default class ChatView extends View {
       payload: {
         message: {
           id: messageId,
+        },
+      },
+    };
+    this.api.send(data);
+  }
+
+  editMessage(messageId: string, text: string) {
+    const data: IMessageEditRequest = {
+      id: generateId(),
+      type: MessageTypes.MSG_EDIT,
+      payload: {
+        message: {
+          id: messageId,
+          text,
         },
       },
     };
@@ -206,6 +224,30 @@ export default class ChatView extends View {
       });
 
       this.userDialogueElement.renderMessagesHistory(this.userMessages);
+    }
+  }
+
+  editMessageListener(e: MessageEvent<string>) {
+    const data: IMessageEditResponse = JSON.parse(e.data);
+
+    if (data.type === MessageTypes.MSG_EDIT) {
+      if (data.payload.message.status.isEdited) {
+        this.userMessages = this.userMessages.map((message) => {
+          if (message.id === data.payload.message.id) {
+            return {
+              ...message,
+              status: {
+                ...message.status,
+                isEdited: data.payload.message.status.isEdited,
+              },
+              text: data.payload.message.text,
+            };
+          }
+          return message;
+        });
+
+        this.userDialogueElement.renderMessagesHistory(this.userMessages);
+      }
     }
   }
 
