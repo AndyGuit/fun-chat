@@ -73,12 +73,16 @@ export default function UserDialogue(props: Props) {
 
     const messageToEditId = form.getAttribute('data-message-edit-id');
 
-    if (input.value.trim() === '') return;
+    if (input.value.trim() === '') {
+      input.classList.add('invalid');
+      return;
+    }
 
     if (messageToEditId) {
       props.handleEditMessage(messageToEditId, input.value);
       form.removeAttribute('data-message-edit-id');
       input.value = '';
+      input.classList.remove('invalid');
       return;
     }
 
@@ -96,6 +100,7 @@ export default function UserDialogue(props: Props) {
     });
 
     input.value = '';
+    input.classList.remove('invalid');
   });
 
   function removeContextMenu(e: MouseEvent) {

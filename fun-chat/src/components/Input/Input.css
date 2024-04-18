@@ -15,4 +15,11 @@
   &:disabled {
     opacity: 0.6;
   }
+
+  &.invalid {
+    border-color: #e31919;
+    &:focus {
+      outline: 2px solid #e31919;
+    }
+  }
 }
