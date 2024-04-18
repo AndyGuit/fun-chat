@@ -296,12 +296,19 @@ export default class ChatView extends View {
       data.type === MessageTypes.USER_EXTERNAL_LOGIN ||
       data.type === MessageTypes.USER_EXTERNAL_LOGOUT
     ) {
-      this.userList = this.userList.map((user) => {
-        if (data.payload.user.login === user.login) {
-          user.isLogined = data.payload.user.isLogined;
-        }
-        return user;
-      });
+      const isUserInList = this.userList.some((user) => user.login === data.payload.user.login);
+
+      if (isUserInList) {
+        this.userList = this.userList.map((user) => {
+          if (data.payload.user.login === user.login) {
+            user.isLogined = data.payload.user.isLogined;
+          }
+          return user;
+        });
+      } else {
+        this.userList.push(data.payload.user);
+      }
+
       this.userListElement.renderUsers(this.userList);
     }
   }
