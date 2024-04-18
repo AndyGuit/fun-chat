@@ -7,6 +7,7 @@ export enum MessageTypes {
   USER_EXTERNAL_LOGOUT = 'USER_EXTERNAL_LOGOUT',
   ERROR = 'ERROR',
   MSG_SEND = 'MSG_SEND',
+  MSG_DELIVER = 'MSG_DELIVER',
   MSG_FROM_USER = 'MSG_FROM_USER',
   MSG_READ = 'MSG_READ',
   MSG_DELETE = 'MSG_DELETE',
@@ -99,6 +100,19 @@ export interface IExternalUserSessionResponse {
     user: {
       login: string;
       isLogined: boolean;
+    };
+  };
+}
+
+export interface IDeliveredMessageResponse {
+  id: null;
+  type: MessageTypes.MSG_DELIVER;
+  payload: {
+    message: {
+      id: string;
+      status: {
+        isDelivered: boolean;
+      };
     };
   };
 }
@@ -254,4 +268,5 @@ export type TServerResponses =
   | IUserLogoutSuccessResponse
   | IMessageReadStatusChangeResponse
   | IExternalUserSessionResponse
+  | IDeliveredMessageResponse
   | IErrorResponse;

@@ -22,6 +22,7 @@ import {
   IMessageEditRequest,
   IMessageEditResponse,
   IExternalUserSessionResponse,
+  IDeliveredMessageResponse,
 } from '../../types/apiInterfaces';
 import Footer from '../../components/Footer/Footer';
 import UserList from '../../components/UserList/UserList';
@@ -82,6 +83,7 @@ export default class ChatView extends View {
     this.api.addMessageListener(this.editMessageListener.bind(this));
     this.api.addMessageListener(this.deleteMessageListener.bind(this));
     this.api.addMessageListener(this.messageToReadedStatusListener.bind(this));
+    this.api.addMessageListener(this.messageToDeliveredStatusListener.bind(this));
     this.api.addMessageListener(this.messagesHistoryListener.bind(this));
     this.api.addMessageListener(this.getMessageListener.bind(this));
     this.api.addMessageListener(this.getUsersListener.bind(this));
@@ -198,6 +200,8 @@ export default class ChatView extends View {
     const data: ISendMessageResponse = JSON.parse(e.data);
 
     if (data.type === MessageTypes.MSG_SEND) {
+      console.log(data.type);
+      console.log(data);
       if (
         data.payload.message.from === this.userState.getName() ||
         data.payload.message.from === this.userState.dialogingWith
@@ -214,6 +218,24 @@ export default class ChatView extends View {
     if (data.type === MessageTypes.MSG_FROM_USER) {
       this.userMessages = data.payload.messages;
       this.userDialogueElement.renderMessagesHistory(data.payload.messages);
+    }
+  }
+
+  messageToDeliveredStatusListener(e: MessageEvent<string>) {
+    const data: IDeliveredMessageResponse = JSON.parse(e.data);
+
+    if (data.type === MessageTypes.MSG_DELIVER) {
+      this.userMessages = this.userMessages.map((message) => {
+        if (message.id === data.payload.message.id) {
+          return {
+            ...message,
+            status: { ...message.status, isDelivered: data.payload.message.status.isDelivered },
+          };
+        }
+        return message;
+      });
+
+      this.userDialogueElement.renderMessagesHistory(this.userMessages);
     }
   }
 
@@ -274,15 +296,12 @@ export default class ChatView extends View {
       data.type === MessageTypes.USER_EXTERNAL_LOGIN ||
       data.type === MessageTypes.USER_EXTERNAL_LOGOUT
     ) {
-      console.log(data.type);
-      console.log(data);
       this.userList = this.userList.map((user) => {
         if (data.payload.user.login === user.login) {
           user.isLogined = data.payload.user.isLogined;
         }
         return user;
       });
-      console.log(JSON.stringify(this.userList));
       this.userListElement.renderUsers(this.userList);
     }
   }
