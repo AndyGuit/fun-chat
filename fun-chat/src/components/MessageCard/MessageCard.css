@@ -10,17 +10,12 @@
     align-self: flex-end;
   }
 
-  & header {
+  & header,
+  & footer {
     display: flex;
     font-size: 0.75em;
     width: 100%;
     justify-content: space-around;
-  }
-
-  & footer {
-    display: flex;
-    justify-content: flex-end;
-    font-size: 0.75em;
   }
 }
 

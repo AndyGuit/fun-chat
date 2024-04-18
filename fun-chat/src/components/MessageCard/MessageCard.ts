@@ -28,13 +28,17 @@ export default function MessageCard(props: Props) {
   header.append(senderName, sendDate);
 
   const footer = document.createElement('footer');
+
   const messageStatus = document.createElement('div');
   messageStatus.textContent = props.status.isDelivered
     ? props.status.isReaded
       ? 'Readed'
       : 'Delivered'
     : 'Sent';
-  footer.append(messageStatus);
+
+  const messageEditedStatus = document.createElement('div');
+  if (props.status.isEdited) messageEditedStatus.textContent = 'Edited';
+  footer.append(messageEditedStatus, messageStatus);
 
   const textElement = document.createElement('div');
   textElement.classList.add('message-text');

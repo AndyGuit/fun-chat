@@ -1,10 +1,4 @@
-import {
-  IMessage,
-  IMessageEditRequest,
-  ISendMessageRequest,
-  IUser,
-  MessageTypes,
-} from '../../types/apiInterfaces';
+import { IMessage, ISendMessageRequest, IUser, MessageTypes } from '../../types/apiInterfaces';
 import { generateId, removeChildElements } from '../../utils/functions';
 import Button from '../Button/Button';
 import ContextMenu from '../ContextMenu/ContextMenu';
