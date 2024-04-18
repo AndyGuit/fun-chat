@@ -200,8 +200,6 @@ export default class ChatView extends View {
     const data: ISendMessageResponse = JSON.parse(e.data);
 
     if (data.type === MessageTypes.MSG_SEND) {
-      console.log(data.type);
-      console.log(data);
       if (
         data.payload.message.from === this.userState.getName() ||
         data.payload.message.from === this.userState.dialogingWith
@@ -307,6 +305,10 @@ export default class ChatView extends View {
         });
       } else {
         this.userList.push(data.payload.user);
+      }
+
+      if (this.userState.dialogingWith === data.payload.user.login) {
+        this.userDialogueElement.setUserDialogueStatus(data.payload.user.isLogined);
       }
 
       this.userListElement.renderUsers(this.userList);

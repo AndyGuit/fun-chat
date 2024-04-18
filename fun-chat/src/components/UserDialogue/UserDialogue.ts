@@ -140,11 +140,15 @@ export default function UserDialogue(props: Props) {
 
   function handleDialogue(user: IUser) {
     selectedUserName.textContent = user.login;
-    selectedUserStatus.textContent = user.isLogined ? 'Online' : 'Offline';
-    selectedUserStatus.className = user.isLogined ? 'active' : 'inactive';
+    setUserDialogueStatus(user.isLogined);
     button.removeAttribute('disabled');
     input.removeAttribute('disabled');
     input.placeholder = 'Your message';
+  }
+
+  function setUserDialogueStatus(isLogined: boolean) {
+    selectedUserStatus.textContent = isLogined ? 'Online' : 'Offline';
+    selectedUserStatus.className = isLogined ? 'active' : 'inactive';
   }
 
   function renderMessagesHistory(messages: IMessage[]) {
@@ -213,5 +217,6 @@ export default function UserDialogue(props: Props) {
     handleDialogue,
     renderMessagesHistory,
     addNewMessage,
+    setUserDialogueStatus,
   };
 }
