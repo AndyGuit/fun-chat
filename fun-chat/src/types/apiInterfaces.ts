@@ -3,6 +3,8 @@ export enum MessageTypes {
   USER_LOGOUT = 'USER_LOGOUT',
   USER_ACTIVE = 'USER_ACTIVE',
   USER_INACTIVE = 'USER_INACTIVE',
+  USER_EXTERNAL_LOGIN = 'USER_EXTERNAL_LOGIN',
+  USER_EXTERNAL_LOGOUT = 'USER_EXTERNAL_LOGOUT',
   ERROR = 'ERROR',
   MSG_SEND = 'MSG_SEND',
   MSG_FROM_USER = 'MSG_FROM_USER',
@@ -87,6 +89,17 @@ export interface IUserInactiveResponse {
   type: MessageTypes.USER_INACTIVE;
   payload: {
     users: Array<IUser>;
+  };
+}
+
+export interface IExternalUserSessionResponse {
+  id: null;
+  type: MessageTypes.USER_EXTERNAL_LOGIN | MessageTypes.USER_EXTERNAL_LOGOUT;
+  payload: {
+    user: {
+      login: string;
+      isLogined: boolean;
+    };
   };
 }
 
@@ -240,4 +253,5 @@ export type TServerResponses =
   | IUserAuthSuccessResponse
   | IUserLogoutSuccessResponse
   | IMessageReadStatusChangeResponse
+  | IExternalUserSessionResponse
   | IErrorResponse;

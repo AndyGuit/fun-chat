@@ -40,6 +40,7 @@ export default function UserList(props: Props) {
 
     const liItem = users
       .filter((user) => user.login !== props.currentUserName)
+      .sort((a, b) => Number(b.isLogined) - Number(a.isLogined))
       .map((user) => {
         const unreadMessagesElement = document.createElement('div');
         unreadMessagesElement.classList.add('unread');
