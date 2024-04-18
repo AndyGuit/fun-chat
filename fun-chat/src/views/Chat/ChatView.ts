@@ -26,7 +26,7 @@ import {
 } from '../../types/apiInterfaces';
 import Footer from '../../components/Footer/Footer';
 import UserList from '../../components/UserList/UserList';
-import { generateId } from '../../utils/functions';
+import { deleteLoginData, generateId } from '../../utils/functions';
 import UserDialogue from '../../components/UserDialogue/UserDialogue';
 
 export default class ChatView extends View {
@@ -313,6 +313,7 @@ export default class ChatView extends View {
       this.userState.setName('');
       this.userState.setPassword('');
       this.userState.isLoggedIn = data.payload.user.isLogined;
+      deleteLoginData();
 
       this.router.navigate(ROUTE_PATH.login);
     }
