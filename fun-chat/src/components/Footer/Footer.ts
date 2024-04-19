@@ -1,4 +1,4 @@
-import { CREATOR_GITHUB, RS_SCHOOL_LINK } from '../../utils/globalVariables';
+import { CREATOR_GITHUB, RS_SCHOOL_LINK, RS_SCHOOL_LOGO_HTML } from '../../utils/globalVariables';
 import './Footer.css';
 
 export default function Footer() {
@@ -12,8 +12,8 @@ export default function Footer() {
   githubLink.setAttribute('href', CREATOR_GITHUB);
 
   const schoolLink = document.createElement('a');
-  schoolLink.textContent = 'RS School';
-  schoolLink.classList.add('link');
+  schoolLink.innerHTML = RS_SCHOOL_LOGO_HTML;
+  schoolLink.classList.add('link', 'logo');
   schoolLink.setAttribute('target', '_blank');
   schoolLink.setAttribute('href', RS_SCHOOL_LINK);
 
