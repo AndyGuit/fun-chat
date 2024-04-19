@@ -100,6 +100,17 @@ export default class ChatView extends View {
   }
 
   sendMessage(data: ISendMessageRequest) {
+    const receiverName = data.payload.message.to;
+    const receiverUnreadMessages = this.userState
+      .getUserDialogingWithHistory()
+      .filter((message) => message.from === receiverName && !message.status.isReaded);
+
+    if (receiverUnreadMessages.length) {
+      receiverUnreadMessages.forEach((msg) => {
+        this.changeMessageStatusToReaded(msg.id);
+      });
+    }
+
     this.api.send(data);
   }
 
@@ -207,8 +218,8 @@ export default class ChatView extends View {
       this.userState.addMessagesToHistory(data.payload.message);
 
       if (
-        data.payload.message.from === this.userState.dialogingWith ||
-        data.payload.message.from === this.userState.getName()
+        data.payload.message.from === this.userState.getName() ||
+        data.payload.message.from === this.userState.dialogingWith
       ) {
         this.userDialogueElement.addNewMessage(data.payload.message);
       }
