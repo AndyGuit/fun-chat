@@ -16,7 +16,6 @@ import {
   ISendMessageResponse,
   IMessageHistoryResponse,
   IMessageReadStatusChangeResponse,
-  IMessage,
   IMessageDeleteRequest,
   IMessageDeleteResponse,
   IMessageEditRequest,
@@ -214,6 +213,9 @@ export default class ChatView extends View {
 
     if (data.type === MessageTypes.MSG_FROM_USER) {
       this.userState.messageHistory.push(...data.payload.messages);
+
+      console.log(MessageTypes.MSG_FROM_USER);
+      console.log(this.userState);
     }
   }
 
