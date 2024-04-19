@@ -6,6 +6,8 @@ export default class UserState {
 
   private password: string;
 
+  unreadMessages: Array<{ from: string; numOfMessages: number }>;
+
   usersList: Array<IUser>;
 
   messageHistory: Array<IMessage>;
@@ -30,6 +32,7 @@ export default class UserState {
     this.dialogingWith = '';
     this.usersList = [];
     this.messageHistory = [];
+    this.unreadMessages = [];
   }
 
   setPassword(password: string) {
@@ -62,8 +65,28 @@ export default class UserState {
     });
   }
 
-  addMessageToHistory(message: IMessage) {
-    this.messageHistory.push(message);
+  addUnreadMessage(fromUser: string) {
+    if (fromUser === this.name) return;
+
+    const userIndex = this.unreadMessages.findIndex((user) => user.from === fromUser);
+
+    if (userIndex > -1) {
+      this.unreadMessages[userIndex].numOfMessages += 1;
+    } else {
+      this.unreadMessages.push({ from: fromUser, numOfMessages: 1 });
+    }
+  }
+
+  removeUnreadMessages(fromUser: string) {
+    const userIndex = this.unreadMessages.findIndex((user) => user.from === fromUser);
+
+    if (userIndex > -1) {
+      this.unreadMessages.splice(userIndex, 1);
+    }
+  }
+
+  addMessagesToHistory(...messages: IMessage[]) {
+    this.messageHistory.push(...messages);
   }
 
   messageStatusToDelivered(messageId: string) {

@@ -4,6 +4,7 @@ import { IUser } from '../../types/apiInterfaces';
 interface Props {
   users: Array<IUser>;
   currentUserName: string;
+  unreadMessages: Array<{ from: string; numOfMessages: number }>;
   handleSearchUser: (e: Event) => void;
   handleClickUser: (user: IUser) => void;
 }

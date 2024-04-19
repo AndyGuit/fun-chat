@@ -51,6 +51,7 @@ export default class ChatView extends View {
       currentUserName: this.userState.getName(),
       handleSearchUser: this.searchUsers.bind(this),
       handleClickUser: this.startDialogue.bind(this),
+      unreadMessages: this.userState.unreadMessages,
     });
 
     this.userDialogueElement = UserDialogue({
@@ -203,8 +204,11 @@ export default class ChatView extends View {
     const data: ISendMessageResponse = JSON.parse(e.data);
 
     if (data.type === MessageTypes.MSG_SEND) {
-      this.userState.addMessageToHistory(data.payload.message);
+      this.userState.addMessagesToHistory(data.payload.message);
       this.userDialogueElement.addNewMessage(data.payload.message);
+      this.userState.addUnreadMessage(data.payload.message.from);
+
+      console.log(this.userState.unreadMessages);
     }
   }
 
@@ -212,10 +216,15 @@ export default class ChatView extends View {
     const data: IMessageHistoryResponse = JSON.parse(e.data);
 
     if (data.type === MessageTypes.MSG_FROM_USER) {
-      this.userState.messageHistory.push(...data.payload.messages);
+      this.userState.addMessagesToHistory(...data.payload.messages);
 
-      console.log(MessageTypes.MSG_FROM_USER);
-      console.log(this.userState);
+      data.payload.messages.forEach((message) => {
+        if (!message.status.isReaded) {
+          this.userState.addUnreadMessage(message.from);
+        }
+      });
+
+      console.log(this.userState.unreadMessages);
     }
   }
 
@@ -234,6 +243,7 @@ export default class ChatView extends View {
     if (data.type === MessageTypes.MSG_READ) {
       this.userState.messageStatusToReaded(data.payload.message.id);
       this.userDialogueElement.renderMessagesHistory(this.userState.messageHistory);
+      this.userState.removeUnreadMessages(this.userState.dialogingWith);
     }
   }
 
