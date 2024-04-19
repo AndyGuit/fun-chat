@@ -267,7 +267,8 @@ export default class ChatView extends View {
       if (data.payload.message.status.isEdited) {
         const { id, text } = data.payload.message;
         this.userState.editMessageText(id, text);
-        this.userDialogueElement.renderMessagesHistory(this.userState.messageHistory);
+        const dialoginHistory = this.userState.getUserDialogingWithHistory();
+        this.userDialogueElement.renderMessagesHistory(dialoginHistory);
       }
     }
   }
@@ -278,7 +279,8 @@ export default class ChatView extends View {
     if (data.type === MessageTypes.MSG_DELETE) {
       if (data.payload.message.status.isDeleted) {
         this.userState.deleteMessageFromHistory(data.payload.message.id);
-        this.userDialogueElement.renderMessagesHistory(this.userState.messageHistory);
+        const dialoginHistory = this.userState.getUserDialogingWithHistory();
+        this.userDialogueElement.renderMessagesHistory(dialoginHistory);
       }
     }
   }
