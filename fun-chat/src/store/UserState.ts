@@ -69,4 +69,8 @@ export default class UserState {
       this.messageHistory[messageIndex].status.isReaded = true;
     }
   }
+
+  deleteMessageFromHistory(messageId: string) {
+    this.messageHistory = this.messageHistory.filter((message) => message.id !== messageId);
+  }
 }

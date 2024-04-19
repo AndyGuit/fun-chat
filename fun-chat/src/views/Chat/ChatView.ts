@@ -276,11 +276,8 @@ export default class ChatView extends View {
 
     if (data.type === MessageTypes.MSG_DELETE) {
       if (data.payload.message.status.isDeleted) {
-        this.userMessages = this.userMessages.filter((message) => {
-          return message.id !== data.payload.message.id;
-        });
-
-        this.userDialogueElement.renderMessagesHistory(this.userMessages);
+        this.userState.deleteMessageFromHistory(data.payload.message.id);
+        this.userDialogueElement.renderMessagesHistory(this.userState.messageHistory);
       }
     }
   }
