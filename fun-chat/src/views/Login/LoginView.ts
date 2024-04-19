@@ -6,7 +6,7 @@ import AuthForm from '../../components/AuthForm/AuthForm';
 import { saveLoginData, validatePassword, validateUserName } from '../../utils/functions';
 import SocketApi from '../../api/Api';
 import UserState from '../../store/UserState';
-import { MessageTypes, TLoginResponse } from '../../types/apiInterfaces';
+import { MessageTypes, ReadyStateStatus, TLoginResponse } from '../../types/apiInterfaces';
 
 export default class LoginView extends View {
   private router: Router;
@@ -24,6 +24,7 @@ export default class LoginView extends View {
 
     this.userState = userState;
 
+    this.api.addCloseListener(this.checkConnectionListener.bind(this));
     this.api.addMessageListener(this.loginListener.bind(this));
     this.render();
   }
@@ -35,6 +36,10 @@ export default class LoginView extends View {
     });
 
     this.getElement().append(form);
+  }
+
+  checkConnectionListener() {
+    this.showModal('Oops, we lost connection with server. Please, try again later.');
   }
 
   handleLogin(e: SubmitEvent) {

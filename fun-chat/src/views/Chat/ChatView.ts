@@ -50,6 +50,7 @@ export default class ChatView extends View {
   }
 
   addApiListeners() {
+    this.api.addCloseListener(this.closeConnectionError.bind(this));
     this.api.addMessageListener(this.loginListener.bind(this));
     this.api.addMessageListener(this.externalUserSessionListener.bind(this));
     this.api.addMessageListener(this.editMessageListener.bind(this));
@@ -330,5 +331,9 @@ export default class ChatView extends View {
     if (data.type === MessageTypes.ERROR) {
       this.showModal(data.payload.error);
     }
+  }
+
+  closeConnectionError() {
+    this.showModal('Oops, we lost connection with server. Please try again later.');
   }
 }

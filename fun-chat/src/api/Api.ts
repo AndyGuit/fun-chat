@@ -70,6 +70,10 @@ export default class SocketApi {
     this.ws.addEventListener('open', callback);
   }
 
+  addCloseListener(callback: (e: CloseEvent) => void) {
+    this.ws.addEventListener('close', callback);
+  }
+
   addMessageListener(callback: (e: MessageEvent<string>) => void) {
     this.ws.addEventListener('message', callback);
   }
