@@ -71,7 +71,7 @@ export default class LoginView extends View {
     }
 
     if (data.type === MessageTypes.ERROR) {
-      console.log(data.payload.error);
+      this.showModal(data.payload.error);
     }
   }
 }

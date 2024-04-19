@@ -91,6 +91,10 @@ export default class UserState {
     }
   }
 
+  hasUnreadMessagesWithDialoginUser() {
+    return !!this.unreadMessages.findIndex((user) => user.from === this.dialogingWith);
+  }
+
   removeUnreadMessages(fromUser: string) {
     const userIndex = this.unreadMessages.findIndex((user) => user.from === fromUser);
 

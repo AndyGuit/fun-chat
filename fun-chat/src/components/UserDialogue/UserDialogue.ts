@@ -199,10 +199,7 @@ export default function UserDialogue(props: Props) {
       from: message.from === props.senderName ? 'You' : message.from,
       status: message.status,
     });
-    if (message.from !== props.senderName) {
-      unreadMessages.push(message);
-      dialogueChat.append(unreadMessagesSeparator);
-    }
+    console.log('add new message: ', message);
     ignoreScroll = true;
     dialogueChat.append(card);
     dialogueChat.scrollTo(0, dialogueChat.scrollHeight);
