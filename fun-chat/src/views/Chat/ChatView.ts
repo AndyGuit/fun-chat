@@ -207,13 +207,8 @@ export default class ChatView extends View {
     const data: ISendMessageResponse = JSON.parse(e.data);
 
     if (data.type === MessageTypes.MSG_SEND) {
-      if (
-        data.payload.message.from === this.userState.getName() ||
-        data.payload.message.from === this.userState.dialogingWith
-      ) {
-        this.userState.messageHistory.push(data.payload.message);
-        this.userDialogueElement.addNewMessage(data.payload.message);
-      }
+      this.userState.messageHistory.push(data.payload.message);
+      this.userDialogueElement.addNewMessage(data.payload.message);
     }
   }
 
@@ -247,11 +242,8 @@ export default class ChatView extends View {
     const data: IMessageReadStatusChangeResponse = JSON.parse(e.data);
 
     if (data.type === MessageTypes.MSG_READ) {
-      this.userMessages = this.userMessages.map((msg) => {
-        return { ...msg, status: { ...msg.status, isReaded: true } };
-      });
-
-      this.userDialogueElement.renderMessagesHistory(this.userMessages);
+      this.userState.messageStatusToReaded(data.payload.message.id);
+      this.userDialogueElement.renderMessagesHistory(this.userState.messageHistory);
     }
   }
 

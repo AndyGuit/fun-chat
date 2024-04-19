@@ -61,4 +61,12 @@ export default class UserState {
       return false;
     });
   }
+
+  messageStatusToReaded(messageId: string) {
+    const messageIndex = this.messageHistory.findIndex((message) => message.id === messageId);
+
+    if (messageIndex > -1) {
+      this.messageHistory[messageIndex].status.isReaded = true;
+    }
+  }
 }
