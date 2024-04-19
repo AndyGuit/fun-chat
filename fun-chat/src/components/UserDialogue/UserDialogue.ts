@@ -86,7 +86,7 @@ export default function UserDialogue(props: Props) {
       return;
     }
 
-    // handleReadMessage();
+    handleReadMessage();
 
     props.handleSendMessage({
       id: generateId(),
@@ -199,7 +199,14 @@ export default function UserDialogue(props: Props) {
       from: message.from === props.senderName ? 'You' : message.from,
       status: message.status,
     });
-    console.log('add new message: ', message);
+
+    if (!message.status.isReaded && message.from !== props.senderName) {
+      unreadMessages.push(message);
+      dialogueChat.append(unreadMessagesSeparator);
+    }
+
+    console.log('add new message', { uName: props.senderName, date: new Date() });
+
     ignoreScroll = true;
     dialogueChat.append(card);
     dialogueChat.scrollTo(0, dialogueChat.scrollHeight);

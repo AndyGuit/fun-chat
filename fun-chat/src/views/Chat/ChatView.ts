@@ -100,17 +100,6 @@ export default class ChatView extends View {
   }
 
   sendMessage(data: ISendMessageRequest) {
-    const receiverName = data.payload.message.to;
-    const receiverUnreadMessages = this.userState
-      .getUserDialogingWithHistory()
-      .filter((message) => message.from === receiverName && !message.status.isReaded);
-
-    if (receiverUnreadMessages.length) {
-      receiverUnreadMessages.forEach((msg) => {
-        this.changeMessageStatusToReaded(msg.id);
-      });
-    }
-
     this.api.send(data);
   }
 
@@ -226,10 +215,6 @@ export default class ChatView extends View {
 
       this.userState.addUnreadMessage(data.payload.message.from);
       this.userListElement.renderUsers(this.userState.usersList);
-
-      // console.log(this.userState.userList);
-
-      console.log(this.userState.unreadMessages);
     }
   }
 
@@ -246,8 +231,6 @@ export default class ChatView extends View {
       });
 
       this.userListElement.renderUsers(this.userState.usersList);
-
-      console.log(this.userState.unreadMessages);
     }
   }
 
@@ -340,7 +323,7 @@ export default class ChatView extends View {
     }
 
     if (data.type === MessageTypes.ERROR) {
-      console.error(data);
+      this.showModal(data.payload.error);
     }
   }
 }
