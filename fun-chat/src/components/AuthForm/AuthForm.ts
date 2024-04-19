@@ -20,7 +20,7 @@ export default function AuthForm(props: Props) {
     value: '',
     id: 'Name',
     validateFn: validateUserName,
-    invalidText: 'Name should be at least 3 characters',
+    invalidText: 'Min 3 characters and starts with capital',
   });
   const inputPassword = InputField({
     type: 'password',

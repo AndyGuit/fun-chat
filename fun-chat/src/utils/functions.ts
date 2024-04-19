@@ -1,7 +1,7 @@
 import { STORAGE_KEYS } from './globalVariables';
 
 export function validateUserName(name: string) {
-  return name.length > 3;
+  return name.length > 2 && name[0].toUpperCase() === name[0];
 }
 
 export function validatePassword(password: string) {
