@@ -62,11 +62,32 @@ export default class UserState {
     });
   }
 
+  addMessageToHistory(message: IMessage) {
+    this.messageHistory.push(message);
+  }
+
+  messageStatusToDelivered(messageId: string) {
+    const messageIndex = this.messageHistory.findIndex((message) => message.id === messageId);
+
+    if (messageIndex > -1) {
+      this.messageHistory[messageIndex].status.isDelivered = true;
+    }
+  }
+
   messageStatusToReaded(messageId: string) {
     const messageIndex = this.messageHistory.findIndex((message) => message.id === messageId);
 
     if (messageIndex > -1) {
       this.messageHistory[messageIndex].status.isReaded = true;
+    }
+  }
+
+  editMessageText(messageId: string, editedText: string) {
+    const messageIndex = this.messageHistory.findIndex((message) => message.id === messageId);
+
+    if (messageIndex > -1) {
+      this.messageHistory[messageIndex].text = editedText;
+      this.messageHistory[messageIndex].status.isEdited = true;
     }
   }
 

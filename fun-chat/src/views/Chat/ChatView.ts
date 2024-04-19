@@ -38,8 +38,6 @@ export default class ChatView extends View {
 
   private userDialogueElement: ReturnType<typeof UserDialogue>;
 
-  private userMessages: IMessage[];
-
   private userState: UserState;
 
   constructor(router: Router, api: SocketApi, userState: UserState) {
@@ -48,7 +46,6 @@ export default class ChatView extends View {
     this.router = router;
     this.api = api;
     this.userState = userState;
-    this.userMessages = [];
 
     this.userListElement = UserList({
       users: this.userState.usersList,
@@ -207,7 +204,7 @@ export default class ChatView extends View {
     const data: ISendMessageResponse = JSON.parse(e.data);
 
     if (data.type === MessageTypes.MSG_SEND) {
-      this.userState.messageHistory.push(data.payload.message);
+      this.userState.addMessageToHistory(data.payload.message);
       this.userDialogueElement.addNewMessage(data.payload.message);
     }
   }
@@ -224,17 +221,8 @@ export default class ChatView extends View {
     const data: IDeliveredMessageResponse = JSON.parse(e.data);
 
     if (data.type === MessageTypes.MSG_DELIVER) {
-      this.userMessages = this.userMessages.map((message) => {
-        if (message.id === data.payload.message.id) {
-          return {
-            ...message,
-            status: { ...message.status, isDelivered: data.payload.message.status.isDelivered },
-          };
-        }
-        return message;
-      });
-
-      this.userDialogueElement.renderMessagesHistory(this.userMessages);
+      this.userState.messageStatusToDelivered(data.payload.message.id);
+      this.userDialogueElement.renderMessagesHistory(this.userState.messageHistory);
     }
   }
 
@@ -252,21 +240,9 @@ export default class ChatView extends View {
 
     if (data.type === MessageTypes.MSG_EDIT) {
       if (data.payload.message.status.isEdited) {
-        this.userMessages = this.userMessages.map((message) => {
-          if (message.id === data.payload.message.id) {
-            return {
-              ...message,
-              status: {
-                ...message.status,
-                isEdited: data.payload.message.status.isEdited,
-              },
-              text: data.payload.message.text,
-            };
-          }
-          return message;
-        });
-
-        this.userDialogueElement.renderMessagesHistory(this.userMessages);
+        const { id, text } = data.payload.message;
+        this.userState.editMessageText(id, text);
+        this.userDialogueElement.renderMessagesHistory(this.userState.messageHistory);
       }
     }
   }
