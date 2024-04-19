@@ -205,8 +205,18 @@ export default class ChatView extends View {
 
     if (data.type === MessageTypes.MSG_SEND) {
       this.userState.addMessagesToHistory(data.payload.message);
-      this.userDialogueElement.addNewMessage(data.payload.message);
+
+      if (
+        data.payload.message.from === this.userState.dialogingWith ||
+        data.payload.message.from === this.userState.getName()
+      ) {
+        this.userDialogueElement.addNewMessage(data.payload.message);
+      }
+
       this.userState.addUnreadMessage(data.payload.message.from);
+      this.userListElement.renderUsers(this.userState.usersList);
+
+      // console.log(this.userState.userList);
 
       console.log(this.userState.unreadMessages);
     }
@@ -223,6 +233,8 @@ export default class ChatView extends View {
           this.userState.addUnreadMessage(message.from);
         }
       });
+
+      this.userListElement.renderUsers(this.userState.usersList);
 
       console.log(this.userState.unreadMessages);
     }
@@ -244,6 +256,7 @@ export default class ChatView extends View {
       this.userState.messageStatusToReaded(data.payload.message.id);
       this.userDialogueElement.renderMessagesHistory(this.userState.messageHistory);
       this.userState.removeUnreadMessages(this.userState.dialogingWith);
+      this.userListElement.renderUsers(this.userState.usersList);
     }
   }
 

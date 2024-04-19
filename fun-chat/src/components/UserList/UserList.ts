@@ -25,8 +25,9 @@ export default function UserList(props: Props) {
   ul.addEventListener('click', (e) => {
     const target = e.target as HTMLElement;
     if (target.classList.contains('user-list-item')) {
+      const userName = target.getAttribute('data-username');
       const userData: IUser = {
-        login: target.textContent || '',
+        login: userName || '',
         isLogined: target.classList.contains('active'),
       };
 
@@ -43,13 +44,24 @@ export default function UserList(props: Props) {
       .filter((user) => user.login !== props.currentUserName)
       .sort((a, b) => Number(b.isLogined) - Number(a.isLogined))
       .map((user) => {
+        const isHasUnreadMessages = props.unreadMessages.find(
+          (object) => object.from === user.login,
+        );
+
         const unreadMessagesElement = document.createElement('div');
         unreadMessagesElement.classList.add('unread');
-        // unreadMessagesElement.textContent = '10';
+
+        if (isHasUnreadMessages) {
+          unreadMessagesElement.classList.add('visible');
+          unreadMessagesElement.textContent = isHasUnreadMessages.numOfMessages.toString();
+        } else {
+          unreadMessagesElement.classList.remove('visible');
+        }
 
         const li = document.createElement('li');
         const activeClass = user.isLogined ? 'active' : 'inactive';
         li.classList.add('user-list-item', activeClass);
+        li.setAttribute('data-username', user.login);
         li.textContent = user.login;
 
         li.append(unreadMessagesElement);
