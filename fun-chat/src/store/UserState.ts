@@ -77,6 +77,20 @@ export default class UserState {
     }
   }
 
+  decreaseUnreadMessage(fromUser: string) {
+    if (fromUser === this.name) return;
+
+    const userIndex = this.unreadMessages.findIndex((user) => user.from === fromUser);
+
+    if (userIndex === -1) return;
+
+    if (this.unreadMessages[userIndex].numOfMessages === 1) {
+      this.unreadMessages.splice(userIndex, 1);
+    } else {
+      this.unreadMessages[userIndex].numOfMessages -= 1;
+    }
+  }
+
   removeUnreadMessages(fromUser: string) {
     const userIndex = this.unreadMessages.findIndex((user) => user.from === fromUser);
 

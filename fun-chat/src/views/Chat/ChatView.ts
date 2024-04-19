@@ -245,7 +245,7 @@ export default class ChatView extends View {
 
     if (data.type === MessageTypes.MSG_DELIVER) {
       this.userState.messageStatusToDelivered(data.payload.message.id);
-      this.userDialogueElement.renderMessagesHistory(this.userState.messageHistory);
+      this.userDialogueElement.renderMessagesHistory(this.userState.getUserDialogingWithHistory());
     }
   }
 
@@ -254,7 +254,7 @@ export default class ChatView extends View {
 
     if (data.type === MessageTypes.MSG_READ) {
       this.userState.messageStatusToReaded(data.payload.message.id);
-      this.userDialogueElement.renderMessagesHistory(this.userState.messageHistory);
+      this.userDialogueElement.renderMessagesHistory(this.userState.getUserDialogingWithHistory());
       this.userState.removeUnreadMessages(this.userState.dialogingWith);
       this.userListElement.renderUsers(this.userState.usersList);
     }
@@ -281,6 +281,7 @@ export default class ChatView extends View {
         this.userState.deleteMessageFromHistory(data.payload.message.id);
         const dialoginHistory = this.userState.getUserDialogingWithHistory();
         this.userDialogueElement.renderMessagesHistory(dialoginHistory);
+        // this.userListElement.renderUsers(this.userState.usersList);
       }
     }
   }
