@@ -111,8 +111,6 @@ export default function UserDialogue(props: Props) {
     if (target.classList.contains('edit')) {
       if (messageText) input.value = messageText;
       if (messageId) form.setAttribute('data-message-edit-id', messageId);
-
-      console.log('edit message');
     }
 
     if (target.classList.contains('delete')) {
@@ -204,8 +202,6 @@ export default function UserDialogue(props: Props) {
       unreadMessages.push(message);
       dialogueChat.append(unreadMessagesSeparator);
     }
-
-    console.log('add new message', { uName: props.senderName, date: new Date() });
 
     ignoreScroll = true;
     dialogueChat.append(card);

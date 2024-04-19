@@ -14,6 +14,12 @@ export default class App {
 
   private api: SocketApi;
 
+  private loginView: LoginView;
+
+  private chatView: ChatView;
+
+  private aboutView: AboutView;
+
   private userState: UserState;
 
   constructor() {
@@ -23,6 +29,10 @@ export default class App {
     this.router = new Router(this.createRoutes());
     this.userState = new UserState();
     this.api = new SocketApi(this.userState);
+
+    this.aboutView = new AboutView();
+    this.loginView = new LoginView(this.router, this.api, this.userState);
+    this.chatView = new ChatView(this.router, this.api, this.userState);
   }
 
   createRoutes() {
@@ -41,9 +51,9 @@ export default class App {
       {
         path: ROUTE_PATH.login,
         callback: () => {
-          // this.renderView(this.loginView);
           if (!this.userState.isLoggedIn) {
-            this.renderView(new LoginView(this.router, this.api, this.userState));
+            this.renderView(this.loginView);
+            // this.renderView(new LoginView(this.router, this.api, this.userState));
           } else {
             this.router.navigate(ROUTE_PATH.chat);
           }
@@ -52,15 +62,16 @@ export default class App {
       {
         path: ROUTE_PATH.about,
         callback: () => {
-          this.renderView(new AboutView());
+          this.renderView(this.aboutView);
+          // this.renderView(new AboutView());
         },
       },
       {
         path: ROUTE_PATH.chat,
         callback: () => {
-          // this.renderView(this.chatView);
           if (this.userState.isLoggedIn) {
-            this.renderView(new ChatView(this.router, this.api, this.userState));
+            this.renderView(this.chatView);
+            // this.renderView(new ChatView(this.router, this.api, this.userState));
           } else {
             this.router.navigate(ROUTE_PATH.login);
           }
