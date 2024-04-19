@@ -6,7 +6,6 @@ import UserState from '../../store/UserState';
 import View from '../View';
 import { ROUTE_PATH } from '../../utils/globalVariables';
 import {
-  ReadyStateStatus,
   IUserActiveResponse,
   IUserInactiveResponse,
   MessageTypes,
@@ -22,10 +21,11 @@ import {
   IMessageEditResponse,
   IExternalUserSessionResponse,
   IDeliveredMessageResponse,
+  IUserAuthSuccessResponse,
 } from '../../types/apiInterfaces';
 import Footer from '../../components/Footer/Footer';
 import UserList from '../../components/UserList/UserList';
-import { deleteLoginData, generateId } from '../../utils/functions';
+import { deleteLoginData, generateId, removeChildElements } from '../../utils/functions';
 import UserDialogue from '../../components/UserDialogue/UserDialogue';
 
 export default class ChatView extends View {
@@ -33,9 +33,9 @@ export default class ChatView extends View {
 
   private api: SocketApi;
 
-  private userListElement: ReturnType<typeof UserList>;
+  private userListElement!: ReturnType<typeof UserList>;
 
-  private userDialogueElement: ReturnType<typeof UserDialogue>;
+  private userDialogueElement!: ReturnType<typeof UserDialogue>;
 
   private userState: UserState;
 
@@ -46,33 +46,11 @@ export default class ChatView extends View {
     this.api = api;
     this.userState = userState;
 
-    this.userListElement = UserList({
-      users: this.userState.usersList,
-      currentUserName: this.userState.getName(),
-      handleSearchUser: this.searchUsers.bind(this),
-      handleClickUser: this.startDialogue.bind(this),
-      unreadMessages: this.userState.unreadMessages,
-    });
-
-    this.userDialogueElement = UserDialogue({
-      senderName: this.userState.getName(),
-      handleSendMessage: this.sendMessage.bind(this),
-      handleChangeMessageToReaded: this.changeMessageStatusToReaded.bind(this),
-      handleDeleteMessage: this.deleteMessage.bind(this),
-      handleEditMessage: this.editMessage.bind(this),
-    });
-
-    if (this.api.getStatus() === ReadyStateStatus.CONNETCING) {
-      this.api.addOpenListener(this.requestUsers.bind(this));
-    } else {
-      this.requestUsers();
-    }
-
     this.addApiListeners();
-    this.render();
   }
 
   addApiListeners() {
+    this.api.addMessageListener(this.loginListener.bind(this));
     this.api.addMessageListener(this.externalUserSessionListener.bind(this));
     this.api.addMessageListener(this.editMessageListener.bind(this));
     this.api.addMessageListener(this.deleteMessageListener.bind(this));
@@ -85,8 +63,24 @@ export default class ChatView extends View {
   }
 
   render() {
+    this.userListElement = UserList({
+      users: this.userState.usersList,
+      currentUserName: this.userState.name,
+      handleSearchUser: this.searchUsers.bind(this),
+      handleClickUser: this.startDialogue.bind(this),
+      unreadMessages: this.userState.unreadMessages,
+    });
+
+    this.userDialogueElement = UserDialogue({
+      senderName: this.userState.name,
+      handleSendMessage: this.sendMessage.bind(this),
+      handleChangeMessageToReaded: this.changeMessageStatusToReaded.bind(this),
+      handleDeleteMessage: this.deleteMessage.bind(this),
+      handleEditMessage: this.editMessage.bind(this),
+    });
+
     const header = Header({
-      userName: this.userState.getName(),
+      userName: this.userState.name,
       onLogout: this.handleLogout.bind(this),
     });
 
@@ -136,7 +130,7 @@ export default class ChatView extends View {
   }
 
   handleLogout() {
-    this.api.logout({ name: this.userState.getName(), password: this.userState.getPassword() });
+    this.api.logout({ name: this.userState.name, password: this.userState.getPassword() });
   }
 
   changeMessageStatusToReaded(messageId: string) {
@@ -186,7 +180,7 @@ export default class ChatView extends View {
 
   getAllMessagesHistory() {
     this.userState.usersList.forEach((user) => {
-      if (user.login === this.userState.getName()) return;
+      if (user.login === this.userState.name) return;
 
       this.api.send({
         type: MessageTypes.MSG_FROM_USER,
@@ -207,7 +201,7 @@ export default class ChatView extends View {
       this.userState.addMessagesToHistory(data.payload.message);
 
       if (
-        data.payload.message.from === this.userState.getName() ||
+        data.payload.message.from === this.userState.name ||
         data.payload.message.from === this.userState.dialogingWith
       ) {
         this.userDialogueElement.addNewMessage(data.payload.message);
@@ -310,14 +304,27 @@ export default class ChatView extends View {
     }
   }
 
+  loginListener(e: MessageEvent<string>) {
+    const data: IUserAuthSuccessResponse = JSON.parse(e.data);
+
+    if (data.type === MessageTypes.USER_LOGIN) {
+      this.userState.isLoggedIn = data.payload.user.isLogined;
+      this.userState.name = data.payload.user.login;
+      this.requestUsers();
+      this.render();
+    }
+  }
+
   logoutListener(e: MessageEvent<string>) {
     const data: TLogoutResponse = JSON.parse(e.data);
 
     if (data.type === MessageTypes.USER_LOGOUT) {
-      this.userState.setName('');
+      this.userState.name = '';
       this.userState.setPassword('');
       this.userState.isLoggedIn = data.payload.user.isLogined;
       deleteLoginData();
+
+      removeChildElements(this.getElement());
 
       this.router.navigate(ROUTE_PATH.login);
     }

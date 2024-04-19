@@ -57,7 +57,7 @@ export default class LoginView extends View {
 
     this.api.login({ name: userName, password: userPassword });
 
-    this.userState.setName(userName);
+    this.userState.name = userName;
     this.userState.setPassword(userPassword);
   }
 
@@ -66,7 +66,7 @@ export default class LoginView extends View {
 
     if (data.type === MessageTypes.USER_LOGIN) {
       this.userState.isLoggedIn = data.payload.user.isLogined;
-      saveLoginData({ name: this.userState.getName(), password: this.userState.getPassword() });
+      saveLoginData({ name: this.userState.name, password: this.userState.getPassword() });
       this.router.navigate(ROUTE_PATH.chat);
     }
 

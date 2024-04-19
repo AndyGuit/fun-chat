@@ -1,5 +1,6 @@
 import './UserList.css';
 import { IUser } from '../../types/apiInterfaces';
+import { removeChildElements } from '../../utils/functions';
 
 interface Props {
   users: Array<IUser>;
@@ -36,9 +37,7 @@ export default function UserList(props: Props) {
   });
 
   function renderUsers(users: Array<IUser>) {
-    while (ul.firstElementChild) {
-      ul.firstElementChild.remove();
-    }
+    removeChildElements(ul);
 
     const liItem = users
       .filter((user) => user.login !== props.currentUserName)

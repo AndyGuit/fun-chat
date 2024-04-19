@@ -2,7 +2,7 @@ import { IMessage, IUser } from '../types/apiInterfaces';
 import { getLoginData } from '../utils/functions';
 
 export default class UserState {
-  private name: string;
+  #name: string;
 
   private password: string;
 
@@ -21,10 +21,10 @@ export default class UserState {
 
     if (loginData) {
       this.isLoggedIn = true;
-      this.name = loginData.name;
+      this.#name = loginData.name;
       this.password = loginData.password;
     } else {
-      this.name = '';
+      this.#name = '';
       this.password = '';
       this.isLoggedIn = false;
     }
@@ -39,25 +39,25 @@ export default class UserState {
     this.password = password;
   }
 
-  setName(name: string) {
-    this.name = name;
+  set name(name: string) {
+    this.#name = name;
   }
 
   getPassword() {
     return this.password;
   }
 
-  getName() {
-    return this.name;
+  get name() {
+    return this.#name;
   }
 
   getUserDialogingWithHistory() {
     return this.messageHistory.filter((message) => {
-      if (message.from === this.getName() && message.to === this.dialogingWith) {
+      if (message.from === this.#name && message.to === this.dialogingWith) {
         return true;
       }
 
-      if (message.to === this.getName() && message.from === this.dialogingWith) {
+      if (message.to === this.#name && message.from === this.dialogingWith) {
         return true;
       }
 
@@ -66,7 +66,7 @@ export default class UserState {
   }
 
   addUnreadMessage(fromUser: string) {
-    if (fromUser === this.name) return;
+    if (fromUser === this.#name) return;
 
     const userIndex = this.unreadMessages.findIndex((user) => user.from === fromUser);
 
@@ -78,7 +78,7 @@ export default class UserState {
   }
 
   decreaseUnreadMessage(fromUser: string) {
-    if (fromUser === this.name) return;
+    if (fromUser === this.#name) return;
 
     const userIndex = this.unreadMessages.findIndex((user) => user.from === fromUser);
 

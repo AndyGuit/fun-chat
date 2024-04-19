@@ -54,7 +54,7 @@ export default class SocketApi {
 
   handleOpen() {
     if (this.userState.isLoggedIn) {
-      this.login({ name: this.userState.getName(), password: this.userState.getPassword() });
+      this.login({ name: this.userState.name, password: this.userState.getPassword() });
     }
   }
 
