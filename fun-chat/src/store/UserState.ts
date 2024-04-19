@@ -51,6 +51,15 @@ export default class UserState {
     return this.#name;
   }
 
+  clearState() {
+    this.name = '';
+    this.setPassword('');
+    this.isLoggedIn = false;
+    this.messageHistory = [];
+    this.usersList = [];
+    this.unreadMessages = [];
+  }
+
   getUserDialogingWithHistory() {
     return this.messageHistory.filter((message) => {
       if (message.from === this.#name && message.to === this.dialogingWith) {

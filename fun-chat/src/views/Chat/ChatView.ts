@@ -319,9 +319,7 @@ export default class ChatView extends View {
     const data: TLogoutResponse = JSON.parse(e.data);
 
     if (data.type === MessageTypes.USER_LOGOUT) {
-      this.userState.name = '';
-      this.userState.setPassword('');
-      this.userState.isLoggedIn = data.payload.user.isLogined;
+      this.userState.clearState();
       deleteLoginData();
 
       removeChildElements(this.getElement());
