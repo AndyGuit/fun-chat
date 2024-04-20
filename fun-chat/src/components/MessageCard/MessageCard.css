@@ -18,7 +18,7 @@
     justify-content: space-around;
   }
 
-  footer {
+  & footer {
     min-height: 12px;
   }
 }
