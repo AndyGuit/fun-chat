@@ -1,9 +1,12 @@
+import { ROUTE_PATH } from '../../utils/globalVariables';
 import Button from '../Button/Button';
+import Link from '../Link/Link';
 import './Header.css';
 
 interface Props {
   userName: string;
   onLogout: () => void;
+  onClickAbout: () => void;
 }
 
 export default function Header(props: Props) {
@@ -18,6 +21,11 @@ export default function Header(props: Props) {
   h1.classList.add('app-name');
   h1.textContent = 'Fun Chat';
 
+  const controlsWrapper = document.createElement('div');
+  controlsWrapper.classList.add('header-controls');
+
+  const aboutLink = Link({ href: ROUTE_PATH.about, text: 'About', onClick: props.onClickAbout });
+
   const logoutButton = Button({
     text: 'Logout',
     classNames: 'button',
@@ -25,6 +33,7 @@ export default function Header(props: Props) {
     onClick: props.onLogout,
   });
 
-  element.append(h2, h1, logoutButton);
+  controlsWrapper.append(aboutLink, logoutButton);
+  element.append(h2, h1, controlsWrapper);
   return element;
 }

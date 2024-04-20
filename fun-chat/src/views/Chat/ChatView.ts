@@ -83,6 +83,7 @@ export default class ChatView extends View {
     const header = Header({
       userName: this.userState.name,
       onLogout: this.handleLogout.bind(this),
+      onClickAbout: () => this.router.navigate(ROUTE_PATH.about),
     });
 
     const main = document.createElement('main');
