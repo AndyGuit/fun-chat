@@ -8,5 +8,13 @@
 
   & main {
     height: 74svh;
+    @media (max-width: 576px) {
+      height: 77svh;
+    }
+  }
+
+  @media (max-width: 576px) {
+    width: 100svw;
+    height: 100svh;
   }
 }
