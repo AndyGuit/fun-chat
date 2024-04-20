@@ -291,7 +291,7 @@ export default class ChatView extends View {
       if (isUserInList) {
         this.userState.usersList = this.userState.usersList.map((user) => {
           if (data.payload.user.login === user.login) {
-            user.isLogined = data.payload.user.isLogined;
+            return { ...user, isLogined: data.payload.user.isLogined };
           }
           return user;
         });
