@@ -6,7 +6,7 @@ import AuthForm from '../../components/AuthForm/AuthForm';
 import { saveLoginData, validatePassword, validateUserName } from '../../utils/functions';
 import SocketApi from '../../api/Api';
 import UserState from '../../store/UserState';
-import { MessageTypes, ReadyStateStatus, TLoginResponse } from '../../types/apiInterfaces';
+import { MessageTypes, TLoginResponse } from '../../types/apiInterfaces';
 
 export default class LoginView extends View {
   private router: Router;

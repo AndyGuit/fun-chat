@@ -40,7 +40,6 @@ export default class App {
       {
         path: ROUTE_PATH.index,
         callback: () => {
-          // this.router.navigate(ROUTE_PATH.login);
           if (this.userState.isLoggedIn) {
             this.router.navigate(ROUTE_PATH.chat);
           } else {
@@ -53,7 +52,6 @@ export default class App {
         callback: () => {
           if (!this.userState.isLoggedIn) {
             this.renderView(this.loginView);
-            // this.renderView(new LoginView(this.router, this.api, this.userState));
           } else {
             this.router.navigate(ROUTE_PATH.chat);
           }
@@ -63,7 +61,6 @@ export default class App {
         path: ROUTE_PATH.about,
         callback: () => {
           this.renderView(this.aboutView);
-          // this.renderView(new AboutView());
         },
       },
       {
@@ -71,7 +68,6 @@ export default class App {
         callback: () => {
           if (this.userState.isLoggedIn) {
             this.renderView(this.chatView);
-            // this.renderView(new ChatView(this.router, this.api, this.userState));
           } else {
             this.router.navigate(ROUTE_PATH.login);
           }

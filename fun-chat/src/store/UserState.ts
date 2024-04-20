@@ -35,20 +35,20 @@ export default class UserState {
     this.unreadMessages = [];
   }
 
-  setPassword(password: string) {
-    this.password = password;
-  }
-
-  set name(name: string) {
-    this.#name = name;
-  }
-
   getPassword() {
     return this.password;
   }
 
+  setPassword(password: string) {
+    this.password = password;
+  }
+
   get name() {
     return this.#name;
+  }
+
+  set name(name: string) {
+    this.#name = name;
   }
 
   clearState() {

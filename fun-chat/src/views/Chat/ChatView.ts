@@ -201,9 +201,10 @@ export default class ChatView extends View {
     if (data.type === MessageTypes.MSG_SEND) {
       this.userState.addMessagesToHistory(data.payload.message);
 
+      // prettier-ignore
       if (
-        data.payload.message.from === this.userState.name ||
-        data.payload.message.from === this.userState.dialogingWith
+        data.payload.message.from === this.userState.name
+        || data.payload.message.from === this.userState.dialogingWith
       ) {
         this.userDialogueElement.addNewMessage(data.payload.message);
       }
@@ -270,7 +271,6 @@ export default class ChatView extends View {
         this.userState.deleteMessageFromHistory(data.payload.message.id);
         const dialoginHistory = this.userState.getUserDialogingWithHistory();
         this.userDialogueElement.renderMessagesHistory(dialoginHistory);
-        // this.userListElement.renderUsers(this.userState.usersList);
       }
     }
   }
@@ -278,9 +278,10 @@ export default class ChatView extends View {
   externalUserSessionListener(e: MessageEvent<string>) {
     const data: IExternalUserSessionResponse = JSON.parse(e.data);
 
+    // prettier-ignore
     if (
-      data.type === MessageTypes.USER_EXTERNAL_LOGIN ||
-      data.type === MessageTypes.USER_EXTERNAL_LOGOUT
+      data.type === MessageTypes.USER_EXTERNAL_LOGIN
+      || data.type === MessageTypes.USER_EXTERNAL_LOGOUT
     ) {
       const isUserInList = this.userState.usersList.some(
         (user) => user.login === data.payload.user.login,

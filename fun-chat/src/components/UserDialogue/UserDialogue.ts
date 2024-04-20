@@ -1,4 +1,7 @@
-import { IMessage, ISendMessageRequest, IUser, MessageTypes } from '../../types/apiInterfaces';
+// prettier-ignore
+import {
+  IMessage, ISendMessageRequest, IUser, MessageTypes,
+} from '../../types/apiInterfaces';
 import { generateId, removeChildElements } from '../../utils/functions';
 import Button from '../Button/Button';
 import ContextMenu from '../ContextMenu/ContextMenu';
@@ -136,17 +139,17 @@ export default function UserDialogue(props: Props) {
     document.body.addEventListener('click', removeContextMenu);
   });
 
+  function setUserDialogueStatus(isLogined: boolean) {
+    selectedUserStatus.textContent = isLogined ? 'Online' : 'Offline';
+    selectedUserStatus.className = isLogined ? 'active' : 'inactive';
+  }
+
   function handleDialogue(user: IUser) {
     selectedUserName.textContent = user.login;
     setUserDialogueStatus(user.isLogined);
     button.removeAttribute('disabled');
     input.removeAttribute('disabled');
     input.placeholder = 'Your message';
-  }
-
-  function setUserDialogueStatus(isLogined: boolean) {
-    selectedUserStatus.textContent = isLogined ? 'Online' : 'Offline';
-    selectedUserStatus.className = isLogined ? 'active' : 'inactive';
   }
 
   function renderMessagesHistory(messages: IMessage[]) {
