@@ -7,6 +7,8 @@ import { saveLoginData, validatePassword, validateUserName } from '../../utils/f
 import SocketApi from '../../api/Api';
 import UserState from '../../store/UserState';
 import { MessageTypes, TLoginResponse } from '../../types/apiInterfaces';
+import Overlay from '../../components/Overlay/Overlay';
+import Loader from '../../components/Loader/Loader';
 
 export default class LoginView extends View {
   private router: Router;
@@ -14,6 +16,10 @@ export default class LoginView extends View {
   private api: SocketApi;
 
   private userState: UserState;
+
+  private overlayElement: HTMLDivElement;
+
+  private loaderElement: HTMLDivElement;
 
   constructor(router: Router, api: SocketApi, userState: UserState) {
     super('div');
@@ -24,22 +30,37 @@ export default class LoginView extends View {
 
     this.userState = userState;
 
+    this.overlayElement = Overlay();
+    this.loaderElement = Loader();
+    this.overlayElement.append(this.loaderElement);
+
     this.api.addCloseListener(this.checkConnectionListener.bind(this));
     this.api.addMessageListener(this.loginListener.bind(this));
     this.render();
   }
 
   render() {
+    this.showLoading();
     const form = AuthForm({
       handleClickInfo: () => this.router.navigate(ROUTE_PATH.about),
       handleSubmit: this.handleLogin.bind(this),
     });
 
+    this.getElement().append(this.overlayElement);
     this.getElement().append(form);
   }
 
   checkConnectionListener() {
+    this.hideLoading();
     this.showModal('Oops, we lost connection with server. Please, try again later.');
+  }
+
+  showLoading() {
+    this.overlayElement.classList.remove('hidden');
+  }
+
+  hideLoading() {
+    this.overlayElement.classList.add('hidden');
   }
 
   handleLogin(e: SubmitEvent) {
