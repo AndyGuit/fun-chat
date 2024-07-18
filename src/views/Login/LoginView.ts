@@ -35,6 +35,7 @@ export default class LoginView extends View {
     this.overlayElement.append(this.loaderElement);
 
     this.api.addCloseListener(this.checkConnectionListener.bind(this));
+    this.api.addOpenListener(this.checkOpenListener.bind(this));
     this.api.addMessageListener(this.loginListener.bind(this));
     this.render();
   }
@@ -48,6 +49,10 @@ export default class LoginView extends View {
 
     this.getElement().append(this.overlayElement);
     this.getElement().append(form);
+  }
+
+  checkOpenListener() {
+    this.hideLoading();
   }
 
   checkConnectionListener() {
