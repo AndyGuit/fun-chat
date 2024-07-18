@@ -27,6 +27,8 @@ import Footer from '../../components/Footer/Footer';
 import UserList from '../../components/UserList/UserList';
 import { deleteLoginData, generateId, removeChildElements } from '../../utils/functions';
 import UserDialogue from '../../components/UserDialogue/UserDialogue';
+import Loader from '../../components/Loader/Loader';
+import Overlay from '../../components/Overlay/Overlay';
 
 export default class ChatView extends View {
   private router: Router;
@@ -37,6 +39,10 @@ export default class ChatView extends View {
 
   private userDialogueElement!: ReturnType<typeof UserDialogue>;
 
+  private overlayElement: HTMLDivElement;
+
+  private loaderElement: HTMLDivElement;
+
   private userState: UserState;
 
   constructor(router: Router, api: SocketApi, userState: UserState) {
@@ -45,6 +51,12 @@ export default class ChatView extends View {
     this.router = router;
     this.api = api;
     this.userState = userState;
+
+    this.overlayElement = Overlay();
+    this.loaderElement = Loader();
+    this.overlayElement.append(this.loaderElement);
+
+    this.getElement().append(this.overlayElement);
 
     this.addApiListeners();
   }
@@ -61,6 +73,14 @@ export default class ChatView extends View {
     this.api.addMessageListener(this.getMessageListener.bind(this));
     this.api.addMessageListener(this.getUsersListener.bind(this));
     this.api.addMessageListener(this.logoutListener.bind(this));
+  }
+
+  showLoading() {
+    this.overlayElement.classList.remove('hidden');
+  }
+
+  hideLoading() {
+    this.overlayElement.classList.add('hidden');
   }
 
   render() {
@@ -315,6 +335,7 @@ export default class ChatView extends View {
       this.userState.name = data.payload.user.login;
       this.requestUsers();
       this.render();
+      this.hideLoading();
     }
   }
 
@@ -336,6 +357,7 @@ export default class ChatView extends View {
   }
 
   closeConnectionError() {
+    this.hideLoading();
     this.showModal('Oops, we lost connection with server. Please try again later.');
   }
 }
