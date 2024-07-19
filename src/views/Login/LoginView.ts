@@ -94,7 +94,6 @@ export default class LoginView extends View {
 
   loginListener(e: MessageEvent<string>) {
     const data: TLoginResponse = JSON.parse(e.data);
-    console.log('login listener');
 
     if (data.type === MessageTypes.USER_LOGIN) {
       this.userState.isLoggedIn = data.payload.user.isLogined;
