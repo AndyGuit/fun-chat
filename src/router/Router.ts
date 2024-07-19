@@ -6,7 +6,7 @@ export default class Router {
   constructor(routes: IRoute[]) {
     this.routes = routes;
 
-    this.initialNaviagion();
+    this.initialNavigation();
 
     window.addEventListener('popstate', this.handlePopState.bind(this));
   }
@@ -26,7 +26,7 @@ export default class Router {
     this.navigate(target.location.pathname);
   }
 
-  initialNaviagion() {
+  initialNavigation() {
     document.addEventListener('DOMContentLoaded', () => {
       const { pathname } = window.location;
       this.navigate(pathname);

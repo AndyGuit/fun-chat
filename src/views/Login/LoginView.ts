@@ -94,10 +94,14 @@ export default class LoginView extends View {
 
   loginListener(e: MessageEvent<string>) {
     const data: TLoginResponse = JSON.parse(e.data);
+    console.log('login listener');
 
     if (data.type === MessageTypes.USER_LOGIN) {
       this.userState.isLoggedIn = data.payload.user.isLogined;
       saveLoginData({ name: this.userState.name, password: this.userState.getPassword() });
+
+      if (window.location.pathname === ROUTE_PATH.about) return;
+
       this.router.navigate(ROUTE_PATH.chat);
     }
 
