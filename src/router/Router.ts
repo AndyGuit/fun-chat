@@ -1,4 +1,5 @@
 import { IRoute } from '../types/interfaces';
+import { ROUTE_PATH } from '../utils/globalVariables';
 
 export default class Router {
   private routes: IRoute[];
@@ -29,7 +30,13 @@ export default class Router {
   initialNavigation() {
     document.addEventListener('DOMContentLoaded', () => {
       const { pathname } = window.location;
-      this.navigate(pathname);
+      const hasCorrectPath = this.routes.some((route) => route.path === pathname);
+
+      if (hasCorrectPath) {
+        this.navigate(pathname);
+      } else {
+        this.navigate(ROUTE_PATH.index);
+      }
     });
   }
 }
