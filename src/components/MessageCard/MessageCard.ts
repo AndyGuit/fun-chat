@@ -33,7 +33,7 @@ export default function MessageCard(props: Props) {
   if (props.from === 'You') {
     messageStatus.textContent = 'Sent';
     if (props.status.isDelivered) messageStatus.textContent = 'Delivered';
-    if (props.status.isReaded) messageStatus.textContent = 'Readed';
+    if (props.status.isReaded) messageStatus.textContent = 'Read';
   }
 
   const messageEditedStatus = document.createElement('div');

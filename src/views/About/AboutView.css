@@ -1,4 +1,6 @@
 .about-wrapper {
+  margin: 0 auto;
+  max-width: 580px;
   padding: 1em 2em;
   border: 1px solid #f8f8f8;
   border-radius: 8px;
