@@ -5,7 +5,7 @@ export const ROUTE_PATH = {
   login: '/login',
 };
 
-export const API_URL = 'ws://127.0.0.1:4000';
+export const API_URL = 'https://fun-chat-server-xk5h.onrender.com'; // ws://127.0.0.1:4000
 
 export const STORAGE_KEYS = {
   userData: 'fun-chat-login',
